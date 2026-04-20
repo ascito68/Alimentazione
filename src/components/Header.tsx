@@ -1,19 +1,27 @@
-import { ChevronLeft, ChevronRight, Settings, BarChart2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Settings, BarChart2, LogOut, User } from 'lucide-react';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 import { useStore } from '../store/useStore';
 import { formatData, oggiISO } from '../utils/calculations';
+import { supabase } from '../lib/supabase';
 
 interface HeaderProps {
   vistaAttiva: 'diario' | 'report' | 'impostazioni';
   setVista: (v: 'diario' | 'report' | 'impostazioni') => void;
+  utente: SupabaseUser | null;
 }
 
-export function Header({ vistaAttiva, setVista }: HeaderProps) {
-  const { dataSelezionata, setDataSelezionata } = useStore();
+export function Header({ vistaAttiva, setVista, utente }: HeaderProps) {
+  const { dataSelezionata, setDataSelezionata, resetDati } = useStore();
 
   function spostaGiorno(delta: number) {
     const d = new Date(dataSelezionata);
     d.setDate(d.getDate() + delta);
     setDataSelezionata(d.toISOString().split('T')[0]);
+  }
+
+  async function logout() {
+    await supabase.auth.signOut();
+    resetDati();
   }
 
   const isOggi = dataSelezionata === oggiISO();
@@ -40,9 +48,7 @@ export function Header({ vistaAttiva, setVista }: HeaderProps) {
               <p className="font-semibold text-gray-800 text-sm sm:text-base">
                 {formatData(dataSelezionata)}
               </p>
-              {isOggi && (
-                <p className="text-xs text-emerald-600 font-medium">Oggi</p>
-              )}
+              {isOggi && <p className="text-xs text-emerald-600 font-medium">Oggi</p>}
             </div>
             <button
               onClick={() => spostaGiorno(1)}
@@ -67,9 +73,7 @@ export function Header({ vistaAttiva, setVista }: HeaderProps) {
           <button
             onClick={() => setVista('diario')}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-              vistaAttiva === 'diario'
-                ? 'bg-emerald-100 text-emerald-700'
-                : 'text-gray-600 hover:bg-gray-100'
+              vistaAttiva === 'diario' ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
             Diario
@@ -77,9 +81,7 @@ export function Header({ vistaAttiva, setVista }: HeaderProps) {
           <button
             onClick={() => setVista('report')}
             className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
-              vistaAttiva === 'report'
-                ? 'bg-emerald-100 text-emerald-700'
-                : 'text-gray-600 hover:bg-gray-100'
+              vistaAttiva === 'report' ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
             <BarChart2 size={15} />
@@ -88,13 +90,28 @@ export function Header({ vistaAttiva, setVista }: HeaderProps) {
           <button
             onClick={() => setVista('impostazioni')}
             className={`p-1.5 rounded-lg transition-colors ${
-              vistaAttiva === 'impostazioni'
-                ? 'bg-emerald-100 text-emerald-700'
-                : 'text-gray-600 hover:bg-gray-100'
+              vistaAttiva === 'impostazioni' ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600 hover:bg-gray-100'
             }`}
           >
             <Settings size={18} />
           </button>
+
+          {/* Utente loggato */}
+          {utente && (
+            <div className="flex items-center gap-1 ml-1 pl-2 border-l border-gray-200">
+              <div className="flex items-center gap-1 text-xs text-gray-500 max-w-[120px]">
+                <User size={13} />
+                <span className="truncate hidden sm:block">{utente.email}</span>
+              </div>
+              <button
+                onClick={logout}
+                title="Esci"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+              >
+                <LogOut size={16} />
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

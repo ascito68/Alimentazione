@@ -9,28 +9,36 @@ import {
   ImpostazioniGoogle,
 } from '../types';
 import { calcolaNutrienti, creaGiornoVuoto, oggiISO } from '../utils/calculations';
+import {
+  caricaTuttiGiorni,
+  inserisciVoce,
+  eliminaVoce,
+  aggiornaVoceSu,
+  caricaImpostazioni,
+  salvaImpostazioni,
+} from '../lib/db';
+import { supabaseConfigurato } from '../lib/supabase';
 
 interface AppState {
   giorni: GiornoAlimentare[];
   dataSelezionata: string;
   impostazioni: ImpostazioniUtente;
   google: ImpostazioniGoogle;
+  caricamento: boolean;
 
-  // navigazione
   setDataSelezionata: (data: string) => void;
   giornoCorrente: () => GiornoAlimentare;
 
-  // gestione pasti
   aggiungiBrano: (tipo: TipoPasto, alimento: Alimento, grammi: number) => void;
   rimuoviBrano: (tipo: TipoPasto, voceId: string) => void;
   aggiornaBrano: (tipo: TipoPasto, voceId: string, grammi: number) => void;
 
-  // impostazioni utente
   setImpostazioni: (imp: Partial<ImpostazioniUtente>) => void;
-
-  // google
   setGoogle: (g: Partial<ImpostazioniGoogle>) => void;
   clearToken: () => void;
+
+  caricaDaSupabase: () => Promise<void>;
+  resetDati: () => void;
 }
 
 const IMPOSTAZIONI_DEFAULT: ImpostazioniUtente = {
@@ -48,33 +56,22 @@ export const useStore = create<AppState>()(
       giorni: [],
       dataSelezionata: oggiISO(),
       impostazioni: IMPOSTAZIONI_DEFAULT,
-      google: {
-        clientId: '',
-        spreadsheetId: null,
-        accessToken: null,
-        tokenExpiry: null,
-      },
+      google: { clientId: '', spreadsheetId: null, accessToken: null, tokenExpiry: null },
+      caricamento: false,
 
       setDataSelezionata: (data) => {
         set((s) => {
           const esiste = s.giorni.some(g => g.data === data);
-          if (!esiste) {
-            return {
-              dataSelezionata: data,
-              giorni: [...s.giorni, creaGiornoVuoto(data)],
-            };
-          }
-          return { dataSelezionata: data };
+          return {
+            dataSelezionata: data,
+            giorni: esiste ? s.giorni : [...s.giorni, creaGiornoVuoto(data)],
+          };
         });
       },
 
       giornoCorrente: () => {
         const { giorni, dataSelezionata } = get();
-        let giorno = giorni.find(g => g.data === dataSelezionata);
-        if (!giorno) {
-          giorno = creaGiornoVuoto(dataSelezionata);
-        }
-        return giorno;
+        return giorni.find(g => g.data === dataSelezionata) ?? creaGiornoVuoto(dataSelezionata);
       },
 
       aggiungiBrano: (tipo, alimento, grammi) => {
@@ -88,12 +85,10 @@ export const useStore = create<AppState>()(
           nutrienti,
         };
 
+        // Aggiornamento locale immediato (ottimistico)
         set((s) => {
-          const esisteGiorno = s.giorni.some(g => g.data === dataSelezionata);
-          const giorni = esisteGiorno
-            ? s.giorni
-            : [...s.giorni, creaGiornoVuoto(dataSelezionata)];
-
+          const esiste = s.giorni.some(g => g.data === dataSelezionata);
+          const giorni = esiste ? s.giorni : [...s.giorni, creaGiornoVuoto(dataSelezionata)];
           return {
             giorni: giorni.map(g => {
               if (g.data !== dataSelezionata) return g;
@@ -101,19 +96,22 @@ export const useStore = create<AppState>()(
                 ...g,
                 pasti: {
                   ...g.pasti,
-                  [tipo]: {
-                    ...g.pasti[tipo],
-                    voci: [...g.pasti[tipo].voci, nuovaVoce],
-                  },
+                  [tipo]: { ...g.pasti[tipo], voci: [...g.pasti[tipo].voci, nuovaVoce] },
                 },
               };
             }),
           };
         });
+
+        // Sync Supabase in background
+        if (supabaseConfigurato) {
+          inserisciVoce(dataSelezionata, tipo, nuovaVoce).catch(console.error);
+        }
       },
 
       rimuoviBrano: (tipo, voceId) => {
         const { dataSelezionata } = get();
+
         set((s) => ({
           giorni: s.giorni.map(g => {
             if (g.data !== dataSelezionata) return g;
@@ -121,14 +119,15 @@ export const useStore = create<AppState>()(
               ...g,
               pasti: {
                 ...g.pasti,
-                [tipo]: {
-                  ...g.pasti[tipo],
-                  voci: g.pasti[tipo].voci.filter(v => v.id !== voceId),
-                },
+                [tipo]: { ...g.pasti[tipo], voci: g.pasti[tipo].voci.filter(v => v.id !== voceId) },
               },
             };
           }),
         }));
+
+        if (supabaseConfigurato) {
+          eliminaVoce(voceId).catch(console.error);
+        }
       },
 
       aggiornaBrano: (tipo, voceId, grammi) => {
@@ -138,17 +137,18 @@ export const useStore = create<AppState>()(
         const voce = giorno.pasti[tipo].voci.find(v => v.id === voceId);
         if (!voce) return;
 
-        const fattoreOriginale = 100 / voce.grammi;
-        const nutrientiBase = {
-          calorie: voce.nutrienti.calorie * fattoreOriginale,
-          proteine: voce.nutrienti.proteine * fattoreOriginale,
-          carboidrati: voce.nutrienti.carboidrati * fattoreOriginale,
-          zuccheri: voce.nutrienti.zuccheri * fattoreOriginale,
-          grassi: voce.nutrienti.grassi * fattoreOriginale,
-          grassiSaturi: voce.nutrienti.grassiSaturi * fattoreOriginale,
-          fibre: voce.nutrienti.fibre * fattoreOriginale,
-          sodio: voce.nutrienti.sodio * fattoreOriginale,
+        const fattore = 100 / voce.grammi;
+        const base = {
+          calorie: voce.nutrienti.calorie * fattore,
+          proteine: voce.nutrienti.proteine * fattore,
+          carboidrati: voce.nutrienti.carboidrati * fattore,
+          zuccheri: voce.nutrienti.zuccheri * fattore,
+          grassi: voce.nutrienti.grassi * fattore,
+          grassiSaturi: voce.nutrienti.grassiSaturi * fattore,
+          fibre: voce.nutrienti.fibre * fattore,
+          sodio: voce.nutrienti.sodio * fattore,
         };
+        const nuoviNutrienti = calcolaNutrienti(base, grammi);
 
         set((s) => ({
           giorni: s.giorni.map(g => {
@@ -159,30 +159,60 @@ export const useStore = create<AppState>()(
                 ...g.pasti,
                 [tipo]: {
                   ...g.pasti[tipo],
-                  voci: g.pasti[tipo].voci.map(v => {
-                    if (v.id !== voceId) return v;
-                    return {
-                      ...v,
-                      grammi,
-                      nutrienti: calcolaNutrienti(nutrientiBase, grammi),
-                    };
-                  }),
+                  voci: g.pasti[tipo].voci.map(v =>
+                    v.id !== voceId ? v : { ...v, grammi, nutrienti: nuoviNutrienti }
+                  ),
                 },
               },
             };
           }),
         }));
+
+        if (supabaseConfigurato) {
+          aggiornaVoceSu(voceId, grammi, nuoviNutrienti).catch(console.error);
+        }
       },
 
-      setImpostazioni: (imp) =>
-        set((s) => ({ impostazioni: { ...s.impostazioni, ...imp } })),
+      setImpostazioni: (imp) => {
+        set((s) => {
+          const aggiornate = { ...s.impostazioni, ...imp };
+          if (supabaseConfigurato) salvaImpostazioni(aggiornate).catch(console.error);
+          return { impostazioni: aggiornate };
+        });
+      },
 
-      setGoogle: (g) =>
-        set((s) => ({ google: { ...s.google, ...g } })),
+      setGoogle: (g) => set((s) => ({ google: { ...s.google, ...g } })),
+      clearToken: () => set((s) => ({ google: { ...s.google, accessToken: null, tokenExpiry: null } })),
 
-      clearToken: () =>
-        set((s) => ({ google: { ...s.google, accessToken: null, tokenExpiry: null } })),
+      caricaDaSupabase: async () => {
+        set({ caricamento: true });
+        try {
+          const [giorni, imp] = await Promise.all([
+            caricaTuttiGiorni(),
+            caricaImpostazioni(),
+          ]);
+          set((s) => ({
+            giorni,
+            impostazioni: imp ? { ...s.impostazioni, ...imp } : s.impostazioni,
+            caricamento: false,
+          }));
+        } catch {
+          set({ caricamento: false });
+        }
+      },
+
+      resetDati: () => {
+        set({
+          giorni: [],
+          dataSelezionata: oggiISO(),
+          google: { clientId: '', spreadsheetId: null, accessToken: null, tokenExpiry: null },
+        });
+      },
     }),
-    { name: 'nutritrack-storage' }
+    {
+      name: 'nutritrack-storage',
+      // Persiste solo le impostazioni offline; i dati vengono da Supabase
+      partialize: (s) => ({ impostazioni: s.impostazioni, google: s.google }),
+    }
   )
 );

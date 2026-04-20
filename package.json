@@ -15,7 +15,8 @@
     "lucide-react": "^0.294.0",
     "recharts": "^2.10.1",
     "date-fns": "^2.30.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "@supabase/supabase-js": "^2.39.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
