@@ -29,7 +29,9 @@ declare global {
 const SCOPE = 'https://www.googleapis.com/auth/spreadsheets';
 const SHEETS_API = 'https://sheets.googleapis.com/v4/spreadsheets';
 
-export async function richiestaToken(clientId: string): Promise<string> {
+export async function richiestaToken(): Promise<string> {
+  const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  if (!clientId) throw new Error('VITE_GOOGLE_CLIENT_ID non configurato.');
   return new Promise((resolve, reject) => {
     if (!window.google?.accounts?.oauth2) {
       reject(new Error('Google Identity Services non caricato. Ricarica la pagina.'));
@@ -49,6 +51,8 @@ export async function richiestaToken(clientId: string): Promise<string> {
     client.requestAccessToken();
   });
 }
+
+export const googleConfigurato = !!import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 async function sheetsRequest<T>(
   method: string,

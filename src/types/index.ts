@@ -72,7 +72,6 @@ export interface ImpostazioniUtente {
 }
 
 export interface ImpostazioniGoogle {
-  clientId: string;
   spreadsheetId: string | null;
   accessToken: string | null;
   tokenExpiry: number | null;

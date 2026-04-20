@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Save, ExternalLink, Info } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { useStore } from '../store/useStore';
 
 export function SettingsPanel() {
-  const { impostazioni, setImpostazioni, google, setGoogle } = useStore();
+  const { impostazioni, setImpostazioni } = useStore();
   const [salvato, setSalvato] = useState(false);
 
   function salva(e: React.FormEvent) {
@@ -63,68 +63,6 @@ export function SettingsPanel() {
         </form>
       </div>
 
-      {/* Google Sheets setup */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <div className="flex items-center gap-2 mb-1">
-          <h2 className="font-bold text-gray-800">🔗 Integrazione Google Sheets</h2>
-        </div>
-        <p className="text-xs text-gray-500 mb-4">
-          Per esportare i dati in Google Sheets devi configurare un'applicazione Google Cloud.
-        </p>
-
-        <div className="bg-blue-50 border border-blue-100 rounded-xl p-3 mb-4">
-          <div className="flex gap-2">
-            <Info size={14} className="text-blue-500 flex-shrink-0 mt-0.5" />
-            <div className="text-xs text-blue-700 space-y-1">
-              <p className="font-semibold">Come ottenere il Client ID:</p>
-              <ol className="list-decimal list-inside space-y-0.5 text-blue-600">
-                <li>Vai su <a href="https://console.cloud.google.com" target="_blank" rel="noreferrer" className="underline">Google Cloud Console</a></li>
-                <li>Crea un nuovo progetto o seleziona uno esistente</li>
-                <li>Attiva l'API Google Sheets</li>
-                <li>Vai in Credenziali → Crea credenziali → ID client OAuth 2.0</li>
-                <li>Tipo: Applicazione web</li>
-                <li>Aggiungi questo URL come origine autorizzata: <code className="bg-blue-100 px-1 rounded">{window.location.origin}</code></li>
-                <li>Copia il Client ID generato</li>
-              </ol>
-            </div>
-          </div>
-        </div>
-
-        <div className="space-y-3">
-          <div>
-            <label className="text-xs font-medium text-gray-600 block mb-1">Google Client ID</label>
-            <input
-              type="text"
-              value={google.clientId}
-              onChange={e => setGoogle({ clientId: e.target.value })}
-              placeholder="xxxxxxxxxx.apps.googleusercontent.com"
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 font-mono"
-            />
-          </div>
-
-          {google.spreadsheetId && (
-            <div>
-              <label className="text-xs font-medium text-gray-600 block mb-1">Foglio corrente</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={google.spreadsheetId}
-                  readOnly
-                  className="flex-1 px-3 py-2 border border-gray-200 rounded-xl text-xs font-mono text-gray-500 bg-gray-50"
-                />
-                <a
-                  href={`https://docs.google.com/spreadsheets/d/${google.spreadsheetId}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="p-2 border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 transition-colors"
-                >
-                  <ExternalLink size={16} />
-                </a>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
 
       {/* Info app */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">

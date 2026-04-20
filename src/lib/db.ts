@@ -155,7 +155,6 @@ export async function caricaImpostazioni(): Promise<{
       targetFibre: row.target_fibre,
     },
     google: {
-      clientId: row.google_client_id,
       spreadsheetId: row.google_spreadsheet_id,
     },
   }
@@ -177,14 +176,13 @@ export async function salvaImpostazioni(imp: ImpostazioniUtente): Promise<void> 
   })
 }
 
-export async function salvaImpostazioniGoogle(google: ImpostazioniGoogle): Promise<void> {
+export async function salvaImpostazioniGoogle(spreadsheetId: string | null): Promise<void> {
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return
 
   await supabase.from('impostazioni_utente').upsert({
     user_id: user.id,
-    google_client_id: google.clientId,
-    google_spreadsheet_id: google.spreadsheetId,
+    google_spreadsheet_id: spreadsheetId,
     updated_at: new Date().toISOString(),
   })
 }

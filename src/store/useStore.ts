@@ -57,7 +57,7 @@ export const useStore = create<AppState>()(
       giorni: [],
       dataSelezionata: oggiISO(),
       impostazioni: IMPOSTAZIONI_DEFAULT,
-      google: { clientId: '', spreadsheetId: null, accessToken: null, tokenExpiry: null },
+      google: { spreadsheetId: null, accessToken: null, tokenExpiry: null },
       caricamento: false,
 
       setDataSelezionata: (data) => {
@@ -185,7 +185,7 @@ export const useStore = create<AppState>()(
       setGoogle: (g) => {
         set((s) => {
           const aggiornato = { ...s.google, ...g };
-          if (supabaseConfigurato) salvaImpostazioniGoogle(aggiornato).catch(console.error);
+          if (supabaseConfigurato) salvaImpostazioniGoogle(aggiornato.spreadsheetId ?? null).catch(console.error);
           return { google: aggiornato };
         });
       },
@@ -202,7 +202,7 @@ export const useStore = create<AppState>()(
             giorni,
             impostazioni: imp.utente ? { ...s.impostazioni, ...imp.utente } : s.impostazioni,
             google: imp.google
-              ? { ...s.google, clientId: imp.google.clientId ?? s.google.clientId, spreadsheetId: imp.google.spreadsheetId ?? s.google.spreadsheetId }
+              ? { ...s.google, spreadsheetId: imp.google.spreadsheetId ?? s.google.spreadsheetId }
               : s.google,
             caricamento: false,
           }));
@@ -215,7 +215,7 @@ export const useStore = create<AppState>()(
         set({
           giorni: [],
           dataSelezionata: oggiISO(),
-          google: { clientId: '', spreadsheetId: null, accessToken: null, tokenExpiry: null },
+          google: { spreadsheetId: null, accessToken: null, tokenExpiry: null },
         });
       },
     }),
