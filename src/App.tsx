@@ -6,6 +6,7 @@ import { NutritionSummary } from './components/NutritionSummary';
 import { ReportView } from './components/ReportView';
 import { SettingsPanel } from './components/SettingsPanel';
 import { AuthModal } from './components/AuthModal';
+import { Footer } from './components/Footer';
 import { TipoPasto } from './types';
 import { useStore } from './store/useStore';
 import { supabase, supabaseConfigurato } from './lib/supabase';
@@ -53,6 +54,7 @@ export default function App() {
           </div>
         </div>
         <AppContent vista={vista} setVista={setVista} utente={null} />
+        <Footer />
       </div>
     );
   }
@@ -87,6 +89,7 @@ export default function App() {
     <div className="min-h-screen bg-gray-50">
       <Header vistaAttiva={vista} setVista={setVista} utente={utente} />
       <AppContent vista={vista} setVista={setVista} utente={utente} />
+      <Footer />
     </div>
   );
 }
