@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { GiornoAlimentare, TipoPasto, VoceAlimento, ImpostazioniUtente } from '../types'
+import { GiornoAlimentare, TipoPasto, VoceAlimento, ImpostazioniUtente, ImpostazioniGoogle } from '../types'
 import { creaGiornoVuoto } from '../utils/calculations'
 
 interface VocePastoRow {
@@ -123,13 +123,16 @@ export async function aggiornaVoceSu(
   }).eq('id', voceId)
 }
 
-export async function caricaImpostazioni(): Promise<Partial<ImpostazioniUtente> | null> {
+export async function caricaImpostazioni(): Promise<{
+  utente: Partial<ImpostazioniUtente> | null
+  google: Partial<ImpostazioniGoogle> | null
+}> {
   const { data, error } = await supabase
     .from('impostazioni_utente')
     .select('*')
     .single()
 
-  if (error || !data) return null
+  if (error || !data) return { utente: null, google: null }
 
   const row = data as {
     nome: string
@@ -138,15 +141,23 @@ export async function caricaImpostazioni(): Promise<Partial<ImpostazioniUtente> 
     target_carboidrati: number
     target_grassi: number
     target_fibre: number
+    google_client_id: string
+    google_spreadsheet_id: string | null
   }
 
   return {
-    nome: row.nome,
-    targetCalorie: row.target_calorie,
-    targetProteine: row.target_proteine,
-    targetCarboidrati: row.target_carboidrati,
-    targetGrassi: row.target_grassi,
-    targetFibre: row.target_fibre,
+    utente: {
+      nome: row.nome,
+      targetCalorie: row.target_calorie,
+      targetProteine: row.target_proteine,
+      targetCarboidrati: row.target_carboidrati,
+      targetGrassi: row.target_grassi,
+      targetFibre: row.target_fibre,
+    },
+    google: {
+      clientId: row.google_client_id,
+      spreadsheetId: row.google_spreadsheet_id,
+    },
   }
 }
 
@@ -162,6 +173,18 @@ export async function salvaImpostazioni(imp: ImpostazioniUtente): Promise<void> 
     target_carboidrati: imp.targetCarboidrati,
     target_grassi: imp.targetGrassi,
     target_fibre: imp.targetFibre,
+    updated_at: new Date().toISOString(),
+  })
+}
+
+export async function salvaImpostazioniGoogle(google: ImpostazioniGoogle): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+
+  await supabase.from('impostazioni_utente').upsert({
+    user_id: user.id,
+    google_client_id: google.clientId,
+    google_spreadsheet_id: google.spreadsheetId,
     updated_at: new Date().toISOString(),
   })
 }

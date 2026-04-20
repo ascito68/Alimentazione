@@ -16,6 +16,7 @@ import {
   aggiornaVoceSu,
   caricaImpostazioni,
   salvaImpostazioni,
+  salvaImpostazioniGoogle,
 } from '../lib/db';
 import { supabaseConfigurato } from '../lib/supabase';
 
@@ -181,7 +182,13 @@ export const useStore = create<AppState>()(
         });
       },
 
-      setGoogle: (g) => set((s) => ({ google: { ...s.google, ...g } })),
+      setGoogle: (g) => {
+        set((s) => {
+          const aggiornato = { ...s.google, ...g };
+          if (supabaseConfigurato) salvaImpostazioniGoogle(aggiornato).catch(console.error);
+          return { google: aggiornato };
+        });
+      },
       clearToken: () => set((s) => ({ google: { ...s.google, accessToken: null, tokenExpiry: null } })),
 
       caricaDaSupabase: async () => {
@@ -193,7 +200,10 @@ export const useStore = create<AppState>()(
           ]);
           set((s) => ({
             giorni,
-            impostazioni: imp ? { ...s.impostazioni, ...imp } : s.impostazioni,
+            impostazioni: imp.utente ? { ...s.impostazioni, ...imp.utente } : s.impostazioni,
+            google: imp.google
+              ? { ...s.google, clientId: imp.google.clientId ?? s.google.clientId, spreadsheetId: imp.google.spreadsheetId ?? s.google.spreadsheetId }
+              : s.google,
             caricamento: false,
           }));
         } catch {
