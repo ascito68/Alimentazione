@@ -1,12 +1,14 @@
-import { ChevronLeft, ChevronRight, Settings, BarChart2, LogOut, User } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Settings, BarChart2, Flame, LogOut, User } from 'lucide-react';
 import { User as SupabaseUser } from '@supabase/supabase-js';
 import { useStore } from '../store/useStore';
 import { formatData, oggiISO } from '../utils/calculations';
 import { supabase } from '../lib/supabase';
 
+type Vista = 'diario' | 'report' | 'attivita' | 'impostazioni';
+
 interface HeaderProps {
-  vistaAttiva: 'diario' | 'report' | 'impostazioni';
-  setVista: (v: 'diario' | 'report' | 'impostazioni') => void;
+  vistaAttiva: Vista;
+  setVista: (v: Vista) => void;
   utente: SupabaseUser | null;
 }
 
@@ -93,6 +95,15 @@ export function Header({ vistaAttiva, setVista, utente }: HeaderProps) {
           >
             <BarChart2 size={15} />
             <span className="hidden sm:inline">Report</span>
+          </button>
+          <button
+            onClick={() => setVista('attivita')}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center gap-1 ${
+              vistaAttiva === 'attivita' ? 'bg-emerald-100 text-emerald-700' : 'text-gray-600 hover:bg-gray-100'
+            }`}
+          >
+            <Flame size={15} />
+            <span className="hidden sm:inline">Attività</span>
           </button>
           <button
             onClick={() => setVista('impostazioni')}

@@ -5,13 +5,14 @@ import { MealSection } from './components/MealSection';
 import { NutritionSummary } from './components/NutritionSummary';
 import { ReportView } from './components/ReportView';
 import { SettingsPanel } from './components/SettingsPanel';
+import { ActivityPanel } from './components/ActivityPanel';
 import { AuthModal } from './components/AuthModal';
 import { Footer } from './components/Footer';
 import { TipoPasto } from './types';
 import { useStore } from './store/useStore';
 import { supabase, supabaseConfigurato } from './lib/supabase';
 
-type Vista = 'diario' | 'report' | 'impostazioni';
+type Vista = 'diario' | 'report' | 'attivita' | 'impostazioni';
 
 const TIPI_PASTO: TipoPasto[] = ['colazione', 'pranzo', 'spuntino', 'cena'];
 
@@ -117,6 +118,7 @@ function AppContent({ vista }: { vista: Vista; setVista: (v: Vista) => void; ute
         </div>
       )}
       {vista === 'report' && <ReportView />}
+      {vista === 'attivita' && <ActivityPanel />}
       {vista === 'impostazioni' && <SettingsPanel />}
     </main>
   );
