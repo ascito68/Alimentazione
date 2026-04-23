@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Save } from 'lucide-react';
 import { useStore } from '../store/useStore';
+import { BMRPanel } from './BMRPanel';
 
 export function SettingsPanel() {
   const { impostazioni, setImpostazioni } = useStore();
@@ -63,6 +64,8 @@ export function SettingsPanel() {
         </form>
       </div>
 
+
+      <BMRPanel />
 
       {/* Info app */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
