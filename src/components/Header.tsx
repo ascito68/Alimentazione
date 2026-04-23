@@ -16,9 +16,13 @@ export function Header({ vistaAttiva, setVista, utente }: HeaderProps) {
   const { dataSelezionata, setDataSelezionata, resetDati } = useStore();
 
   function spostaGiorno(delta: number) {
-    const d = new Date(dataSelezionata);
+    const [y, m, g] = dataSelezionata.split('-').map(Number);
+    const d = new Date(y, m - 1, g); // costruito in ora locale, non UTC
     d.setDate(d.getDate() + delta);
-    setDataSelezionata(d.toISOString().split('T')[0]);
+    const ny = d.getFullYear();
+    const nm = String(d.getMonth() + 1).padStart(2, '0');
+    const ng = String(d.getDate()).padStart(2, '0');
+    setDataSelezionata(`${ny}-${nm}-${ng}`);
   }
 
   async function logout() {
@@ -53,11 +57,20 @@ export function Header({ vistaAttiva, setVista, utente }: HeaderProps) {
             >
               <ChevronLeft size={20} />
             </button>
-            <div className="text-center">
-              <p className="font-semibold text-gray-800 text-sm sm:text-base">
+            <div className="relative text-center cursor-pointer" title="Clicca per scegliere la data">
+              <p className="font-semibold text-gray-800 text-sm sm:text-base pointer-events-none select-none">
                 {formatData(dataSelezionata)}
               </p>
-              {isOggi && <p className="text-xs text-emerald-600 font-medium">Oggi</p>}
+              <p className={`text-xs font-medium pointer-events-none ${isOggi ? 'text-emerald-600' : 'text-gray-400 underline underline-offset-2'}`}>
+                {isOggi ? 'Oggi' : 'Vai a…'}
+              </p>
+              <input
+                type="date"
+                value={dataSelezionata}
+                max={oggiISO()}
+                onChange={e => e.target.value && setDataSelezionata(e.target.value)}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              />
             </div>
             <button
               onClick={() => spostaGiorno(1)}

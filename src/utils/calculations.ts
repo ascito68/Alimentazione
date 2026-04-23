@@ -104,7 +104,11 @@ export function formatData(iso: string): string {
 }
 
 export function oggiISO(): string {
-  return new Date().toISOString().split('T')[0];
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const g = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${g}`;
 }
 
 export function settimanaRange(data: string): { inizio: string; fine: string } {
