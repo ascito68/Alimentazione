@@ -71,6 +71,12 @@ export interface ImpostazioniUtente {
   targetFibre: number;
 }
 
+export interface VoceAttivita {
+  id: string;
+  attivitaId: string;
+  durata: number; // minuti
+}
+
 export interface ImpostazioniGoogle {
   spreadsheetId: string | null;
   accessToken: string | null;

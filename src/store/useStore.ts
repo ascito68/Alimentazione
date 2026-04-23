@@ -7,6 +7,7 @@ import {
   Alimento,
   ImpostazioniUtente,
   ImpostazioniGoogle,
+  VoceAttivita,
 } from '../types';
 import { calcolaNutrienti, creaGiornoVuoto, oggiISO } from '../utils/calculations';
 import {
@@ -26,6 +27,11 @@ interface AppState {
   impostazioni: ImpostazioniUtente;
   google: ImpostazioniGoogle;
   caricamento: boolean;
+
+  pesoAttivita: number;
+  vociAttivita: VoceAttivita[];
+  setPesoAttivita: (peso: number) => void;
+  setVociAttivita: (voci: VoceAttivita[]) => void;
 
   setDataSelezionata: (data: string) => void;
   giornoCorrente: () => GiornoAlimentare;
@@ -59,6 +65,11 @@ export const useStore = create<AppState>()(
       impostazioni: IMPOSTAZIONI_DEFAULT,
       google: { spreadsheetId: null, accessToken: null, tokenExpiry: null },
       caricamento: false,
+
+      pesoAttivita: 70,
+      vociAttivita: [{ id: 'default', attivitaId: 'camminata-normale', durata: 30 }],
+      setPesoAttivita: (peso) => set({ pesoAttivita: peso }),
+      setVociAttivita: (voci) => set({ vociAttivita: voci }),
 
       setDataSelezionata: (data) => {
         set((s) => {
@@ -222,7 +233,12 @@ export const useStore = create<AppState>()(
     {
       name: 'nutritrack-storage',
       // Persiste solo le impostazioni offline; i dati vengono da Supabase
-      partialize: (s) => ({ impostazioni: s.impostazioni, google: s.google }),
+      partialize: (s) => ({
+        impostazioni: s.impostazioni,
+        google: s.google,
+        pesoAttivita: s.pesoAttivita,
+        vociAttivita: s.vociAttivita,
+      }),
     }
   )
 );
