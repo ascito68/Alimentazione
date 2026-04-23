@@ -1,21 +1,33 @@
 import { useState, useMemo } from 'react';
-import { Flame, Timer, User } from 'lucide-react';
+import { Flame, Plus, Trash2, User } from 'lucide-react';
 import { DATABASE_ATTIVITA, CATEGORIE_ATTIVITA } from '../data/activitiesDatabase';
+import { v4 as uuidv4 } from 'uuid';
+
+interface VoceAttivita {
+  id: string
+  attivitaId: string
+  durata: number
+}
 
 export function ActivityPanel() {
   const [peso, setPeso] = useState(70);
-  const [attivitaId, setAttivitaId] = useState('corsa-moderata');
-  const [durata, setDurata] = useState(30);
+  const [voci, setVoci] = useState<VoceAttivita[]>([
+    { id: uuidv4(), attivitaId: 'corsa-moderata', durata: 30 },
+  ]);
 
-  const attivita = DATABASE_ATTIVITA.find(a => a.id === attivitaId)!;
+  function aggiungi() {
+    setVoci(v => [...v, { id: uuidv4(), attivitaId: 'camminata-normale', durata: 30 }]);
+  }
 
-  // kcal = MET × peso(kg) × ore
-  const kcalBruciate = useMemo(
-    () => Math.round(attivita.met * peso * (durata / 60)),
-    [attivita, peso, durata]
-  );
+  function rimuovi(id: string) {
+    setVoci(v => v.filter(x => x.id !== id));
+  }
 
-  // Raggruppa attività per categoria
+  function aggiorna(id: string, campo: 'attivitaId' | 'durata', valore: string | number) {
+    setVoci(v => v.map(x => x.id === id ? { ...x, [campo]: valore } : x));
+  }
+
+  // Raggruppa per optgroup
   const perCategoria = useMemo(() => {
     const mappa: Record<string, typeof DATABASE_ATTIVITA> = {};
     for (const a of DATABASE_ATTIVITA) {
@@ -25,130 +37,116 @@ export function ActivityPanel() {
     return mappa;
   }, []);
 
+  // kcal per ogni voce
+  const kcalPerVoce = useMemo(() =>
+    voci.map(v => {
+      const att = DATABASE_ATTIVITA.find(a => a.id === v.attivitaId)!;
+      return Math.round(att.met * peso * (v.durata / 60));
+    }),
+    [voci, peso]
+  );
+
+  const totale = kcalPerVoce.reduce((s, k) => s + k, 0);
+  const durataTotale = voci.reduce((s, v) => s + v.durata, 0);
+
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
         <h2 className="font-bold text-gray-800 mb-4">🏃 Calorie consumate per attività</h2>
 
-        <div className="space-y-4">
-          {/* Peso */}
-          <div>
-            <label className="text-xs font-medium text-gray-600 block mb-1 flex items-center gap-1">
-              <User size={13} /> Peso corporeo (kg)
-            </label>
-            <input
-              type="number"
-              min={30}
-              max={200}
-              value={peso}
-              onChange={e => setPeso(parseFloat(e.target.value) || 70)}
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
-            />
-          </div>
-
-          {/* Attività */}
-          <div>
-            <label className="text-xs font-medium text-gray-600 block mb-1">
-              Attività
-            </label>
-            <select
-              value={attivitaId}
-              onChange={e => setAttivitaId(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
-            >
-              {Object.entries(perCategoria).map(([cat, lista]) => (
-                <optgroup key={cat} label={CATEGORIE_ATTIVITA[cat]}>
-                  {lista.map(a => (
-                    <option key={a.id} value={a.id}>{a.nome}</option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-          </div>
-
-          {/* Durata */}
-          <div>
-            <label className="text-xs font-medium text-gray-600 block mb-1 flex items-center gap-1">
-              <Timer size={13} /> Durata (minuti)
-            </label>
-            <input
-              type="number"
-              min={1}
-              max={480}
-              value={durata}
-              onChange={e => setDurata(parseInt(e.target.value) || 30)}
-              className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
-            />
-            {/* Slider rapido */}
-            <input
-              type="range"
-              min={5}
-              max={120}
-              step={5}
-              value={Math.min(durata, 120)}
-              onChange={e => setDurata(parseInt(e.target.value))}
-              className="w-full mt-2 accent-emerald-500"
-            />
-            <div className="flex justify-between text-xs text-gray-400 mt-0.5">
-              <span>5 min</span><span>30</span><span>60</span><span>90</span><span>120 min</span>
-            </div>
-          </div>
+        {/* Peso */}
+        <div className="mb-4">
+          <label className="text-xs font-medium text-gray-600 flex items-center gap-1 mb-1">
+            <User size={13} /> Peso corporeo (kg)
+          </label>
+          <input
+            type="number"
+            min={30}
+            max={200}
+            value={peso}
+            onChange={e => setPeso(parseFloat(e.target.value) || 70)}
+            className="w-32 px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
         </div>
 
-        {/* Risultato */}
-        <div className="mt-5 bg-emerald-50 rounded-2xl p-4 flex items-center gap-4">
+        {/* Lista attività */}
+        <div className="space-y-2">
+          {voci.map((voce, i) => {
+            return (
+              <div key={voce.id} className="flex items-center gap-2 bg-gray-50 rounded-xl p-3">
+                <span className="text-xs font-bold text-gray-400 w-5 text-center">{i + 1}</span>
+
+                {/* Selettore attività */}
+                <select
+                  value={voce.attivitaId}
+                  onChange={e => aggiorna(voce.id, 'attivitaId', e.target.value)}
+                  className="flex-1 px-2 py-1.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
+                >
+                  {Object.entries(perCategoria).map(([cat, lista]) => (
+                    <optgroup key={cat} label={CATEGORIE_ATTIVITA[cat]}>
+                      {lista.map(a => (
+                        <option key={a.id} value={a.id}>{a.nome}</option>
+                      ))}
+                    </optgroup>
+                  ))}
+                </select>
+
+                {/* Durata */}
+                <div className="flex items-center gap-1">
+                  <input
+                    type="number"
+                    min={1}
+                    max={480}
+                    value={voce.durata}
+                    onChange={e => aggiorna(voce.id, 'durata', parseInt(e.target.value) || 1)}
+                    className="w-16 px-2 py-1.5 border border-gray-200 rounded-lg text-sm text-center focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  />
+                  <span className="text-xs text-gray-400">min</span>
+                </div>
+
+                {/* kcal voce */}
+                <span className="text-sm font-semibold text-emerald-600 w-16 text-right">
+                  {kcalPerVoce[i]} kcal
+                </span>
+
+                {/* Rimuovi */}
+                <button
+                  onClick={() => rimuovi(voce.id)}
+                  disabled={voci.length === 1}
+                  className="p-1.5 text-gray-300 hover:text-red-400 transition-colors disabled:opacity-20"
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Aggiungi riga */}
+        <button
+          onClick={aggiungi}
+          className="mt-3 w-full flex items-center justify-center gap-2 py-2 border-2 border-dashed border-gray-200 rounded-xl text-sm text-gray-400 hover:border-emerald-300 hover:text-emerald-500 transition-colors"
+        >
+          <Plus size={15} /> Aggiungi attività
+        </button>
+
+        {/* Totale */}
+        <div className="mt-4 bg-emerald-50 rounded-2xl p-4 flex items-center gap-4">
           <div className="bg-emerald-500 rounded-xl p-3">
             <Flame size={28} className="text-white" />
           </div>
           <div>
-            <p className="text-3xl font-bold text-emerald-700">{kcalBruciate} <span className="text-lg font-medium">kcal</span></p>
+            <p className="text-3xl font-bold text-emerald-700">
+              {totale} <span className="text-lg font-medium">kcal</span>
+            </p>
             <p className="text-sm text-emerald-600">
-              {attivita.nome} · {durata} min · {peso} kg
+              {voci.length} {voci.length === 1 ? 'attività' : 'attività'} · {durataTotale} min totali · {peso} kg
             </p>
           </div>
         </div>
-      </div>
 
-      {/* Tabella riepilogativa categorie */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
-        <h3 className="font-semibold text-gray-700 mb-3 text-sm">
-          Confronto attività — {durata} min a {peso} kg
-        </h3>
-        <div className="space-y-2">
-          {Object.entries(perCategoria).map(([cat, lista]) => (
-            <div key={cat}>
-              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
-                {CATEGORIE_ATTIVITA[cat]}
-              </p>
-              <div className="space-y-1">
-                {lista.map(a => {
-                  const kcal = Math.round(a.met * peso * (durata / 60));
-                  const pct = Math.min(100, Math.round((kcal / (DATABASE_ATTIVITA.reduce((mx, x) => Math.max(mx, x.met), 0) * peso * durata / 60)) * 100));
-                  return (
-                    <div
-                      key={a.id}
-                      onClick={() => setAttivitaId(a.id)}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-xl cursor-pointer transition-colors ${
-                        a.id === attivitaId ? 'bg-emerald-50 border border-emerald-200' : 'hover:bg-gray-50'
-                      }`}
-                    >
-                      <span className="text-xs text-gray-700 w-44 truncate">{a.nome}</span>
-                      <div className="flex-1 bg-gray-100 rounded-full h-1.5">
-                        <div
-                          className="bg-emerald-400 h-1.5 rounded-full transition-all"
-                          style={{ width: `${pct}%` }}
-                        />
-                      </div>
-                      <span className="text-xs font-semibold text-gray-700 w-14 text-right">{kcal} kcal</span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ))}
-        </div>
         <p className="text-xs text-gray-400 mt-3">
-          Formula: MET × peso × ore. Valori indicativi (Compendium of Physical Activities).
+          Formula: kcal = MET × peso(kg) × ore. Valori indicativi (Compendium of Physical Activities).
         </p>
       </div>
     </div>
