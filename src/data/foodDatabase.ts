@@ -69,6 +69,17 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     nutrienti: { calorie: 70, proteine: 1.6, carboidrati: 15, zuccheri: 0.3, grassi: 0.4, grassiSaturi: 0.1, fibre: 0.9, sodio: 2 },
   },
 
+  { id: 'pane-segale',      nome: 'Pane di segale',        categoria: 'cereali', nutrienti: { calorie: 259, proteine: 8.8, carboidrati: 48, zuccheri: 3.8, grassi: 3.3, grassiSaturi: 0.4, fibre: 6.2, sodio: 580 } },
+  { id: 'grissini',         nome: 'Grissini',              categoria: 'cereali', nutrienti: { calorie: 390, proteine: 11,  carboidrati: 75, zuccheri: 3,   grassi: 5.5, grassiSaturi: 0.8, fibre: 3,   sodio: 630 } },
+  { id: 'fette-biscottate', nome: 'Fette biscottate',      categoria: 'cereali', nutrienti: { calorie: 394, proteine: 10,  carboidrati: 80, zuccheri: 8,   grassi: 3.5, grassiSaturi: 0.7, fibre: 4,   sodio: 320 } },
+  { id: 'corn-flakes',      nome: 'Corn flakes',           categoria: 'cereali', nutrienti: { calorie: 357, proteine: 6.7, carboidrati: 84, zuccheri: 8,   grassi: 0.4, grassiSaturi: 0.1, fibre: 3,   sodio: 500 } },
+  { id: 'muesli',           nome: 'Muesli',                categoria: 'cereali', nutrienti: { calorie: 363, proteine: 10,  carboidrati: 65, zuccheri: 26,  grassi: 8,   grassiSaturi: 1.3, fibre: 6.6, sodio: 30  } },
+  { id: 'gnocchi-patate',   nome: 'Gnocchi di patate',     categoria: 'cereali', nutrienti: { calorie: 108, proteine: 2.8, carboidrati: 22, zuccheri: 0.9, grassi: 0.9, grassiSaturi: 0.2, fibre: 1.3, sodio: 226 } },
+  { id: 'piadina',          nome: 'Piadina',               categoria: 'cereali', nutrienti: { calorie: 296, proteine: 7.4, carboidrati: 52, zuccheri: 2,   grassi: 6.5, grassiSaturi: 1.6, fibre: 2,   sodio: 618 } },
+  { id: 'couscous',         nome: 'Couscous (cotto)',      categoria: 'cereali', nutrienti: { calorie: 112, proteine: 3.8, carboidrati: 23, zuccheri: 0.1, grassi: 0.2, grassiSaturi: 0,   fibre: 1.4, sodio: 5   } },
+  { id: 'orzo-perlato',     nome: 'Orzo perlato (cotto)',  categoria: 'cereali', nutrienti: { calorie: 123, proteine: 2.3, carboidrati: 28, zuccheri: 0.3, grassi: 0.4, grassiSaturi: 0.1, fibre: 3.8, sodio: 3   } },
+  { id: 'riso-basmati',     nome: 'Riso basmati (crudo)',  categoria: 'cereali', nutrienti: { calorie: 353, proteine: 7,   carboidrati: 78, zuccheri: 0.1, grassi: 0.6, grassiSaturi: 0.2, fibre: 1,   sodio: 5   } },
+
   // ── CARNI ─────────────────────────────────────────────────────────────────
   {
     id: 'pollo-petto',
@@ -119,6 +130,15 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     nutrienti: { calorie: 216, proteine: 26, carboidrati: 0, zuccheri: 0, grassi: 12, grassiSaturi: 3.3, fibre: 0, sodio: 98 },
   },
 
+  { id: 'agnello',          nome: 'Agnello (coscia, cotta)',  categoria: 'carni', nutrienti: { calorie: 218, proteine: 26, carboidrati: 0,   zuccheri: 0,   grassi: 12,  grassiSaturi: 5,   fibre: 0, sodio: 72   } },
+  { id: 'maiale-lonza',    nome: 'Maiale lonza (cotta)',     categoria: 'carni', nutrienti: { calorie: 185, proteine: 29, carboidrati: 0,   zuccheri: 0,   grassi: 7,   grassiSaturi: 2.5, fibre: 0, sodio: 60   } },
+  { id: 'vitello',         nome: 'Vitello fesa (cotta)',     categoria: 'carni', nutrienti: { calorie: 175, proteine: 29, carboidrati: 0,   zuccheri: 0,   grassi: 6,   grassiSaturi: 2,   fibre: 0, sodio: 82   } },
+  { id: 'speck',           nome: 'Speck',                   categoria: 'carni', nutrienti: { calorie: 313, proteine: 24, carboidrati: 1,   zuccheri: 0.5, grassi: 23,  grassiSaturi: 8,   fibre: 0, sodio: 2200 } },
+  { id: 'mortadella',      nome: 'Mortadella',              categoria: 'carni', nutrienti: { calorie: 311, proteine: 15, carboidrati: 1.5, zuccheri: 1,   grassi: 27,  grassiSaturi: 10,  fibre: 0, sodio: 1060 } },
+  { id: 'bresaola',        nome: 'Bresaola',                categoria: 'carni', nutrienti: { calorie: 175, proteine: 32, carboidrati: 0,   zuccheri: 0,   grassi: 5,   grassiSaturi: 2,   fibre: 0, sodio: 1680 } },
+  { id: 'coniglio',        nome: 'Coniglio (cotto)',        categoria: 'carni', nutrienti: { calorie: 179, proteine: 25, carboidrati: 0,   zuccheri: 0,   grassi: 8.5, grassiSaturi: 2.5, fibre: 0, sodio: 60   } },
+  { id: 'wurstel-pollo',   nome: 'Würstel di pollo',        categoria: 'carni', nutrienti: { calorie: 200, proteine: 14, carboidrati: 3,   zuccheri: 1,   grassi: 15,  grassiSaturi: 5,   fibre: 0, sodio: 900  } },
+
   // ── PESCE ─────────────────────────────────────────────────────────────────
   {
     id: 'salmone',
@@ -156,6 +176,16 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     categoria: 'pesce',
     nutrienti: { calorie: 99, proteine: 24, carboidrati: 0, zuccheri: 0, grassi: 1.1, grassiSaturi: 0.3, fibre: 0, sodio: 224 },
   },
+
+  { id: 'trota',            nome: 'Trota (cotta)',              categoria: 'pesce', nutrienti: { calorie: 190, proteine: 22, carboidrati: 0,   zuccheri: 0, grassi: 11,  grassiSaturi: 3,   fibre: 0, sodio: 49  } },
+  { id: 'alici',            nome: 'Alici fresche',             categoria: 'pesce', nutrienti: { calorie: 96,  proteine: 17, carboidrati: 0,   zuccheri: 0, grassi: 3,   grassiSaturi: 0.9, fibre: 0, sodio: 70  } },
+  { id: 'polpo',            nome: 'Polpo (cotto)',             categoria: 'pesce', nutrienti: { calorie: 82,  proteine: 18, carboidrati: 0,   zuccheri: 0, grassi: 1,   grassiSaturi: 0.2, fibre: 0, sodio: 210 } },
+  { id: 'calamari',         nome: 'Calamari (cotti)',          categoria: 'pesce', nutrienti: { calorie: 92,  proteine: 16, carboidrati: 3.1, zuccheri: 0, grassi: 1.4, grassiSaturi: 0.4, fibre: 0, sodio: 260 } },
+  { id: 'orata',            nome: 'Orata (cotta)',             categoria: 'pesce', nutrienti: { calorie: 120, proteine: 22, carboidrati: 0,   zuccheri: 0, grassi: 3.5, grassiSaturi: 0.8, fibre: 0, sodio: 80  } },
+  { id: 'vongole',          nome: 'Vongole (cotte)',           categoria: 'pesce', nutrienti: { calorie: 74,  proteine: 14, carboidrati: 2.6, zuccheri: 0, grassi: 1,   grassiSaturi: 0.2, fibre: 0, sodio: 395 } },
+  { id: 'tonno-olio',       nome: 'Tonno in olio (sgoc.)',     categoria: 'pesce', nutrienti: { calorie: 232, proteine: 25, carboidrati: 0,   zuccheri: 0, grassi: 15,  grassiSaturi: 3.2, fibre: 0, sodio: 405 } },
+  { id: 'cozze',            nome: 'Cozze (cotte)',             categoria: 'pesce', nutrienti: { calorie: 86,  proteine: 18, carboidrati: 3.7, zuccheri: 0, grassi: 2.2, grassiSaturi: 0.4, fibre: 0, sodio: 290 } },
+  { id: 'sardine',          nome: 'Sardine fresche',           categoria: 'pesce', nutrienti: { calorie: 135, proteine: 20, carboidrati: 0,   zuccheri: 0, grassi: 6,   grassiSaturi: 1.5, fibre: 0, sodio: 100 } },
 
   // ── LATTICINI ─────────────────────────────────────────────────────────────
   {
@@ -207,6 +237,14 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     nutrienti: { calorie: 384, proteine: 32, carboidrati: 0, zuccheri: 0, grassi: 28, grassiSaturi: 18, fibre: 0, sodio: 1030 },
   },
 
+  { id: 'latte-parz-scremato', nome: 'Latte parzialmente scremato', categoria: 'latticini', nutrienti: { calorie: 49,  proteine: 3.5, carboidrati: 4.8, zuccheri: 4.8, grassi: 1.6, grassiSaturi: 1,   fibre: 0, sodio: 44   } },
+  { id: 'yogurt-frutta',       nome: 'Yogurt alla frutta',          categoria: 'latticini', nutrienti: { calorie: 95,  proteine: 3.4, carboidrati: 17,  zuccheri: 15,  grassi: 1.5, grassiSaturi: 0.9, fibre: 0, sodio: 55   } },
+  { id: 'scamorza',            nome: 'Scamorza',                    categoria: 'latticini', nutrienti: { calorie: 294, proteine: 26,  carboidrati: 1,   zuccheri: 1,   grassi: 20,  grassiSaturi: 13,  fibre: 0, sodio: 640  } },
+  { id: 'provolone',           nome: 'Provolone',                   categoria: 'latticini', nutrienti: { calorie: 352, proteine: 28,  carboidrati: 0,   zuccheri: 0,   grassi: 27,  grassiSaturi: 17,  fibre: 0, sodio: 860  } },
+  { id: 'pecorino',            nome: 'Pecorino romano',             categoria: 'latticini', nutrienti: { calorie: 387, proteine: 26,  carboidrati: 0.5, zuccheri: 0.5, grassi: 32,  grassiSaturi: 22,  fibre: 0, sodio: 1800 } },
+  { id: 'fontina',             nome: 'Fontina',                     categoria: 'latticini', nutrienti: { calorie: 343, proteine: 25,  carboidrati: 1.5, zuccheri: 0.5, grassi: 27,  grassiSaturi: 17,  fibre: 0, sodio: 720  } },
+  { id: 'fiocchi-latte',       nome: 'Fiocchi di latte',            categoria: 'latticini', nutrienti: { calorie: 105, proteine: 11,  carboidrati: 3.4, zuccheri: 3.4, grassi: 4.5, grassiSaturi: 3,   fibre: 0, sodio: 405  } },
+
   // ── LEGUMI ────────────────────────────────────────────────────────────────
   {
     id: 'ceci-cotti',
@@ -238,6 +276,12 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     categoria: 'legumi',
     nutrienti: { calorie: 121, proteine: 11, carboidrati: 9, zuccheri: 2.2, grassi: 5.2, grassiSaturi: 0.6, fibre: 5.2, sodio: 6 },
   },
+
+  { id: 'cannellini',     nome: 'Fagioli cannellini (cotti)', categoria: 'legumi', nutrienti: { calorie: 114, proteine: 8.5, carboidrati: 19,  zuccheri: 1.8, grassi: 0.4, grassiSaturi: 0.1, fibre: 6,   sodio: 2  } },
+  { id: 'fave',           nome: 'Fave (cotte)',               categoria: 'legumi', nutrienti: { calorie: 110, proteine: 9,   carboidrati: 17,  zuccheri: 3,   grassi: 0.5, grassiSaturi: 0.1, fibre: 6,   sodio: 25 } },
+  { id: 'tofu',           nome: 'Tofu naturale',             categoria: 'legumi', nutrienti: { calorie: 76,  proteine: 8,   carboidrati: 1.9, zuccheri: 0.5, grassi: 4.8, grassiSaturi: 0.7, fibre: 0.3, sodio: 7  } },
+  { id: 'lupini',         nome: 'Lupini (cotti)',            categoria: 'legumi', nutrienti: { calorie: 114, proteine: 16,  carboidrati: 9.9, zuccheri: 1.4, grassi: 3.2, grassiSaturi: 0.5, fibre: 3.4, sodio: 55 } },
+  { id: 'fagioli-neri',   nome: 'Fagioli neri (cotti)',      categoria: 'legumi', nutrienti: { calorie: 132, proteine: 8.9, carboidrati: 24,  zuccheri: 0.3, grassi: 0.5, grassiSaturi: 0.1, fibre: 8.7, sodio: 2  } },
 
   // ── VERDURE ───────────────────────────────────────────────────────────────
   {
@@ -313,6 +357,21 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     nutrienti: { calorie: 25, proteine: 1.3, carboidrati: 5.8, zuccheri: 3.2, grassi: 0.1, grassiSaturi: 0, fibre: 2.5, sodio: 18 },
   },
 
+  { id: 'rucola',           nome: 'Rucola',                    categoria: 'verdure', nutrienti: { calorie: 25, proteine: 2.6, carboidrati: 3.7, zuccheri: 2,   grassi: 0.7, grassiSaturi: 0.1, fibre: 1.6, sodio: 27 } },
+  { id: 'radicchio',        nome: 'Radicchio',                 categoria: 'verdure', nutrienti: { calorie: 23, proteine: 1.4, carboidrati: 4.5, zuccheri: 1.7, grassi: 0.3, grassiSaturi: 0.1, fibre: 3,   sodio: 22 } },
+  { id: 'finocchi',         nome: 'Finocchi',                  categoria: 'verdure', nutrienti: { calorie: 31, proteine: 1.2, carboidrati: 7,   zuccheri: 3.9, grassi: 0.2, grassiSaturi: 0,   fibre: 3.1, sodio: 88 } },
+  { id: 'sedano',           nome: 'Sedano',                    categoria: 'verdure', nutrienti: { calorie: 16, proteine: 0.7, carboidrati: 3,   zuccheri: 1.8, grassi: 0.2, grassiSaturi: 0,   fibre: 1.6, sodio: 80 } },
+  { id: 'funghi-champignon',nome: 'Funghi champignon',         categoria: 'verdure', nutrienti: { calorie: 22, proteine: 3.1, carboidrati: 3.3, zuccheri: 2,   grassi: 0.3, grassiSaturi: 0.1, fibre: 1,   sodio: 5  } },
+  { id: 'patate-vapore',    nome: 'Patate (al vapore)',        categoria: 'verdure', nutrienti: { calorie: 87, proteine: 1.9, carboidrati: 20,  zuccheri: 0.9, grassi: 0.1, grassiSaturi: 0,   fibre: 1.8, sodio: 5  } },
+  { id: 'patate-dolci',     nome: 'Patate dolci (cotte)',      categoria: 'verdure', nutrienti: { calorie: 90, proteine: 2,   carboidrati: 21,  zuccheri: 4.2, grassi: 0.1, grassiSaturi: 0,   fibre: 3,   sodio: 36 } },
+  { id: 'zucca',            nome: 'Zucca (cotta)',             categoria: 'verdure', nutrienti: { calorie: 26, proteine: 0.9, carboidrati: 6.5, zuccheri: 2.8, grassi: 0.1, grassiSaturi: 0,   fibre: 0.5, sodio: 2  } },
+  { id: 'fagiolini',        nome: 'Fagiolini (cotti)',         categoria: 'verdure', nutrienti: { calorie: 31, proteine: 1.8, carboidrati: 7.1, zuccheri: 3.6, grassi: 0.1, grassiSaturi: 0,   fibre: 3,   sodio: 3  } },
+  { id: 'carciofi',         nome: 'Carciofi (cotti)',          categoria: 'verdure', nutrienti: { calorie: 53, proteine: 3.3, carboidrati: 10,  zuccheri: 0,   grassi: 0.4, grassiSaturi: 0.1, fibre: 5.7, sodio: 73 } },
+  { id: 'cavolfiore',       nome: 'Cavolfiore (cotto)',        categoria: 'verdure', nutrienti: { calorie: 25, proteine: 2,   carboidrati: 5,   zuccheri: 2.4, grassi: 0.3, grassiSaturi: 0,   fibre: 2,   sodio: 15 } },
+  { id: 'barbabietola',     nome: 'Barbabietola rossa (cotta)',categoria: 'verdure', nutrienti: { calorie: 44, proteine: 1.7, carboidrati: 10,  zuccheri: 7,   grassi: 0.1, grassiSaturi: 0,   fibre: 2.9, sodio: 77 } },
+  { id: 'porro',            nome: 'Porro',                     categoria: 'verdure', nutrienti: { calorie: 31, proteine: 1.5, carboidrati: 7.3, zuccheri: 2.3, grassi: 0.3, grassiSaturi: 0,   fibre: 1.8, sodio: 10 } },
+  { id: 'insalata-iceberg', nome: 'Insalata iceberg',          categoria: 'verdure', nutrienti: { calorie: 13, proteine: 0.9, carboidrati: 2.9, zuccheri: 1.9, grassi: 0.1, grassiSaturi: 0,   fibre: 1.3, sodio: 10 } },
+
   // ── FRUTTA ────────────────────────────────────────────────────────────────
   {
     id: 'mele',
@@ -375,6 +434,19 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     nutrienti: { calorie: 50, proteine: 0.5, carboidrati: 13, zuccheri: 9.9, grassi: 0.1, grassiSaturi: 0, fibre: 1.4, sodio: 1 },
   },
 
+  { id: 'mandarini',    nome: 'Mandarini',      categoria: 'frutta', nutrienti: { calorie: 53, proteine: 0.7, carboidrati: 13, zuccheri: 10.6, grassi: 0.3, grassiSaturi: 0,   fibre: 1.8, sodio: 2 } },
+  { id: 'lamponi',      nome: 'Lamponi',        categoria: 'frutta', nutrienti: { calorie: 52, proteine: 1.2, carboidrati: 12, zuccheri: 4.4,  grassi: 0.7, grassiSaturi: 0,   fibre: 6.5, sodio: 1 } },
+  { id: 'mirtilli',     nome: 'Mirtilli',       categoria: 'frutta', nutrienti: { calorie: 57, proteine: 0.7, carboidrati: 14, zuccheri: 10,   grassi: 0.3, grassiSaturi: 0,   fibre: 2.4, sodio: 1 } },
+  { id: 'more',         nome: 'More',           categoria: 'frutta', nutrienti: { calorie: 43, proteine: 1.4, carboidrati: 10, zuccheri: 4.9,  grassi: 0.5, grassiSaturi: 0.1, fibre: 5.3, sodio: 1 } },
+  { id: 'cachi',        nome: 'Cachi',          categoria: 'frutta', nutrienti: { calorie: 70, proteine: 0.6, carboidrati: 19, zuccheri: 14,   grassi: 0.4, grassiSaturi: 0.1, fibre: 3.6, sodio: 1 } },
+  { id: 'albicocche',   nome: 'Albicocche',     categoria: 'frutta', nutrienti: { calorie: 48, proteine: 1.4, carboidrati: 11, zuccheri: 9.2,  grassi: 0.4, grassiSaturi: 0,   fibre: 2,   sodio: 1 } },
+  { id: 'prugne',       nome: 'Prugne',         categoria: 'frutta', nutrienti: { calorie: 46, proteine: 0.7, carboidrati: 11, zuccheri: 9.9,  grassi: 0.3, grassiSaturi: 0,   fibre: 1.4, sodio: 0 } },
+  { id: 'cocomero',     nome: 'Cocomero',       categoria: 'frutta', nutrienti: { calorie: 30, proteine: 0.6, carboidrati: 7.6,zuccheri: 6.2,  grassi: 0.2, grassiSaturi: 0,   fibre: 0.4, sodio: 1 } },
+  { id: 'ciliegie',     nome: 'Ciliegie',       categoria: 'frutta', nutrienti: { calorie: 63, proteine: 1.1, carboidrati: 16, zuccheri: 12.8, grassi: 0.2, grassiSaturi: 0,   fibre: 2.1, sodio: 0 } },
+  { id: 'melagrana',    nome: 'Melagrana',      categoria: 'frutta', nutrienti: { calorie: 83, proteine: 1.7, carboidrati: 19, zuccheri: 13.7, grassi: 1.2, grassiSaturi: 0.1, fibre: 4,   sodio: 3 } },
+  { id: 'fichi-freschi',nome: 'Fichi freschi',  categoria: 'frutta', nutrienti: { calorie: 74, proteine: 0.8, carboidrati: 19, zuccheri: 16,   grassi: 0.3, grassiSaturi: 0.1, fibre: 2.9, sodio: 1 } },
+  { id: 'pompelmo',     nome: 'Pompelmo',       categoria: 'frutta', nutrienti: { calorie: 42, proteine: 0.8, carboidrati: 11, zuccheri: 7,    grassi: 0.1, grassiSaturi: 0,   fibre: 1.6, sodio: 0 } },
+
   // ── GRASSI E CONDIMENTI ───────────────────────────────────────────────────
   {
     id: 'olio-oliva',
@@ -413,6 +485,12 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     nutrienti: { calorie: 567, proteine: 26, carboidrati: 16, zuccheri: 4.7, grassi: 49, grassiSaturi: 6.8, fibre: 8.5, sodio: 18 },
   },
 
+  { id: 'pistacchi',        nome: 'Pistacchi',          categoria: 'grassi', nutrienti: { calorie: 562, proteine: 20, carboidrati: 28, zuccheri: 7.7, grassi: 45, grassiSaturi: 5.5, fibre: 10,  sodio: 1  } },
+  { id: 'anacardi',         nome: 'Anacardi',           categoria: 'grassi', nutrienti: { calorie: 553, proteine: 18, carboidrati: 30, zuccheri: 5.9, grassi: 44, grassiSaturi: 7.8, fibre: 3.3, sodio: 12 } },
+  { id: 'nocciole',         nome: 'Nocciole',           categoria: 'grassi', nutrienti: { calorie: 628, proteine: 15, carboidrati: 17, zuccheri: 4.3, grassi: 61, grassiSaturi: 4.5, fibre: 9.7, sodio: 0  } },
+  { id: 'semi-girasole',    nome: 'Semi di girasole',   categoria: 'grassi', nutrienti: { calorie: 584, proteine: 21, carboidrati: 20, zuccheri: 2.6, grassi: 51, grassiSaturi: 4.5, fibre: 8.6, sodio: 9  } },
+  { id: 'semi-chia',        nome: 'Semi di chia',       categoria: 'grassi', nutrienti: { calorie: 486, proteine: 17, carboidrati: 42, zuccheri: 0,   grassi: 31, grassiSaturi: 3.3, fibre: 34,  sodio: 16 } },
+
   // ── DOLCI ─────────────────────────────────────────────────────────────────
   {
     id: 'cioccolato-fondente',
@@ -439,6 +517,13 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     nutrienti: { calorie: 250, proteine: 0.4, carboidrati: 62, zuccheri: 47, grassi: 0.1, grassiSaturi: 0, fibre: 1, sodio: 20 },
   },
 
+  { id: 'zucchero',         nome: 'Zucchero bianco',         categoria: 'dolci', nutrienti: { calorie: 387, proteine: 0,   carboidrati: 100, zuccheri: 100, grassi: 0,  grassiSaturi: 0,  fibre: 0,   sodio: 1  } },
+  { id: 'nutella',          nome: 'Nutella',                 categoria: 'dolci', nutrienti: { calorie: 539, proteine: 6.4, carboidrati: 58,  zuccheri: 57,  grassi: 31, grassiSaturi: 11, fibre: 2.3, sodio: 80 } },
+  { id: 'gelato-crema',     nome: 'Gelato alla crema',       categoria: 'dolci', nutrienti: { calorie: 207, proteine: 3.7, carboidrati: 23,  zuccheri: 21,  grassi: 11, grassiSaturi: 7,  fibre: 0,   sodio: 60 } },
+  { id: 'cioccolato-latte', nome: 'Cioccolato al latte',     categoria: 'dolci', nutrienti: { calorie: 535, proteine: 7.7, carboidrati: 60,  zuccheri: 56,  grassi: 30, grassiSaturi: 18, fibre: 1.5, sodio: 75 } },
+  { id: 'cornetto',         nome: 'Cornetto / Brioche',      categoria: 'dolci', nutrienti: { calorie: 335, proteine: 7,   carboidrati: 48,  zuccheri: 15,  grassi: 13, grassiSaturi: 4,  fibre: 1.5, sodio: 310} },
+  { id: 'cacao-polvere',    nome: 'Cacao amaro in polvere',  categoria: 'dolci', nutrienti: { calorie: 229, proteine: 19,  carboidrati: 54,  zuccheri: 1.7, grassi: 14, grassiSaturi: 8.1,fibre: 37,  sodio: 21 } },
+
   // ── BEVANDE ───────────────────────────────────────────────────────────────
   {
     id: 'succo-arancia',
@@ -458,6 +543,20 @@ export const DATABASE_ALIMENTI: Alimento[] = [
     categoria: 'bevande',
     nutrienti: { calorie: 2, proteine: 0.1, carboidrati: 0.2, zuccheri: 0, grassi: 0.1, grassiSaturi: 0, fibre: 0, sodio: 2 },
   },
+  { id: 'latte-avena',      nome: 'Latte di avena',          categoria: 'bevande', nutrienti: { calorie: 47,  proteine: 1.1, carboidrati: 8.8, zuccheri: 3.7, grassi: 0.9, grassiSaturi: 0.1, fibre: 0.7, sodio: 50  } },
+  { id: 'latte-mandorla',   nome: 'Latte di mandorla',       categoria: 'bevande', nutrienti: { calorie: 24,  proteine: 0.7, carboidrati: 3.1, zuccheri: 2.7, grassi: 1.1, grassiSaturi: 0.1, fibre: 0.3, sodio: 72  } },
+  { id: 'succo-mela',       nome: 'Succo di mela',           categoria: 'bevande', nutrienti: { calorie: 46,  proteine: 0.1, carboidrati: 11,  zuccheri: 10,  grassi: 0.1, grassiSaturi: 0,   fibre: 0.2, sodio: 4   } },
+  { id: 'te-verde',         nome: 'Tè verde (infuso)',       categoria: 'bevande', nutrienti: { calorie: 1,   proteine: 0,   carboidrati: 0.2, zuccheri: 0,   grassi: 0,   grassiSaturi: 0,   fibre: 0,   sodio: 1   } },
+  { id: 'birra-lager',      nome: 'Birra lager (5%)',        categoria: 'bevande', nutrienti: { calorie: 43,  proteine: 0.5, carboidrati: 3.6, zuccheri: 0,   grassi: 0,   grassiSaturi: 0,   fibre: 0,   sodio: 10  } },
+
+  // ── ALTRO ────────────────────────────────────────────────────────────────
+  { id: 'passata-pomodoro', nome: 'Passata di pomodoro',     categoria: 'altro', nutrienti: { calorie: 24,  proteine: 1.6, carboidrati: 4.6, zuccheri: 3.8, grassi: 0.2, grassiSaturi: 0,   fibre: 1.5, sodio: 25  } },
+  { id: 'concentrato-pomodoro', nome: 'Concentrato di pomodoro', categoria: 'altro', nutrienti: { calorie: 83, proteine: 5, carboidrati: 18, zuccheri: 12, grassi: 0.4, grassiSaturi: 0, fibre: 4, sodio: 80 } },
+  { id: 'maionese',         nome: 'Maionese',                categoria: 'altro', nutrienti: { calorie: 680, proteine: 1.2, carboidrati: 2.9, zuccheri: 2,   grassi: 75,  grassiSaturi: 12,  fibre: 0,   sodio: 640 } },
+  { id: 'ketchup',          nome: 'Ketchup',                 categoria: 'altro', nutrienti: { calorie: 100, proteine: 1.7, carboidrati: 24,  zuccheri: 22,  grassi: 0.1, grassiSaturi: 0,   fibre: 0.7, sodio: 960 } },
+  { id: 'hummus',           nome: 'Hummus',                  categoria: 'altro', nutrienti: { calorie: 166, proteine: 8,   carboidrati: 14,  zuccheri: 1.5, grassi: 9.6, grassiSaturi: 1.4, fibre: 6,   sodio: 379 } },
+  { id: 'besciamella',      nome: 'Besciamella',             categoria: 'altro', nutrienti: { calorie: 100, proteine: 3,   carboidrati: 8,   zuccheri: 3,   grassi: 6.5, grassiSaturi: 4,   fibre: 0.3, sodio: 330 } },
+  { id: 'brodo-vegetale',   nome: 'Brodo vegetale',          categoria: 'altro', nutrienti: { calorie: 10,  proteine: 0.5, carboidrati: 1.5, zuccheri: 1,   grassi: 0.3, grassiSaturi: 0.1, fibre: 0,   sodio: 800 } },
 ];
 
 export const CATEGORIE_LABELS: Record<string, string> = {
