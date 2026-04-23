@@ -1,7 +1,12 @@
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import { useMemo } from 'react';
+import {
+  PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, ReferenceLine,
+} from 'recharts';
 import { useStore } from '../store/useStore';
 import { totaleGiorno, percentualiMacro } from '../utils/calculations';
 import { RDA } from '../types';
+import { DATABASE_ATTIVITA } from '../data/activitiesDatabase';
 
 const MACRO_COLORI = {
   proteine: '#3B82F6',
@@ -63,13 +68,31 @@ function CustomLabel({ cx, cy, midAngle, innerRadius, outerRadius, percent }: Cu
 }
 
 export function NutritionSummary() {
-  const { giornoCorrente, impostazioni } = useStore();
+  const { giornoCorrente, impostazioni, vociAttivita, pesoAttivita } = useStore();
   const giorno = giornoCorrente();
   const tot = totaleGiorno(giorno);
   const { percentualeProteine, percentualeCarboidrati, percentualeGrassi } = percentualiMacro(tot);
 
   const haCalorie = tot.calorie > 0;
-  const percCalorie = Math.min(Math.round((tot.calorie / impostazioni.targetCalorie) * 100), 100);
+
+  // Calorie bruciate dalle attività
+  const kcalAttivita = useMemo(() =>
+    vociAttivita.reduce((sum, v) => {
+      const att = DATABASE_ATTIVITA.find(a => a.id === v.attivitaId);
+      return sum + (att ? Math.round(att.met * pesoAttivita * (v.durata / 60)) : 0);
+    }, 0),
+    [vociAttivita, pesoAttivita]
+  );
+
+  const kcalNette = Math.max(0, tot.calorie - kcalAttivita);
+  const bilancio = kcalNette - impostazioni.targetCalorie;
+
+  const datiGrafico = [
+    { nome: 'Target',   kcal: impostazioni.targetCalorie, fill: '#94A3B8' },
+    { nome: 'Assunte',  kcal: tot.calorie,                fill: tot.calorie > impostazioni.targetCalorie ? '#EF4444' : '#10B981' },
+    { nome: 'Bruciate', kcal: kcalAttivita,               fill: '#F97316' },
+    { nome: 'Nette',    kcal: kcalNette,                  fill: kcalNette > impostazioni.targetCalorie ? '#EF4444' : '#3B82F6' },
+  ];
 
   const datiTorta = haCalorie ? [
     { name: 'Proteine', value: Math.round(tot.proteine * 4), color: MACRO_COLORI.proteine },
@@ -77,38 +100,112 @@ export function NutritionSummary() {
     { name: 'Grassi', value: Math.round(tot.grassi * 9), color: MACRO_COLORI.grassi },
   ] : [];
 
+  const statoColori = Math.abs(bilancio) <= 100
+    ? { bg: 'bg-emerald-50', text: 'text-emerald-700' }
+    : bilancio > 0
+      ? { bg: 'bg-red-50', text: 'text-red-700' }
+      : { bg: 'bg-blue-50', text: 'text-blue-700' };
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-5">
       <h2 className="font-bold text-gray-800">Riepilogo giornaliero</h2>
 
-      {/* Calorie totali */}
-      <div className="text-center">
-        <div className="relative inline-flex items-center justify-center">
-          <div className="text-center">
-            <p className="text-4xl font-extrabold text-gray-800">{tot.calorie}</p>
-            <p className="text-sm text-gray-400">kcal totali</p>
+      {/* ── Bilancio energetico ── */}
+      <div>
+        <p className="text-xs font-semibold text-gray-600 mb-3">Bilancio energetico</p>
+
+        {/* 4 stat card */}
+        <div className="grid grid-cols-2 gap-2 mb-3">
+          <div className="bg-gray-50 rounded-xl p-3 text-center">
+            <p className="text-xs text-gray-500 mb-0.5">Target</p>
+            <p className="text-xl font-bold text-gray-700">{impostazioni.targetCalorie}</p>
+            <p className="text-xs text-gray-400">kcal</p>
+          </div>
+          <div className={`rounded-xl p-3 text-center ${tot.calorie > impostazioni.targetCalorie ? 'bg-red-50' : 'bg-emerald-50'}`}>
+            <p className="text-xs text-gray-500 mb-0.5">Assunte</p>
+            <p className={`text-xl font-bold ${tot.calorie > impostazioni.targetCalorie ? 'text-red-600' : 'text-emerald-600'}`}>
+              {tot.calorie}
+            </p>
+            <p className="text-xs text-gray-400">kcal</p>
+          </div>
+          <div className="bg-orange-50 rounded-xl p-3 text-center">
+            <p className="text-xs text-gray-500 mb-0.5">Bruciate</p>
+            <p className="text-xl font-bold text-orange-600">{kcalAttivita}</p>
+            <p className="text-xs text-gray-400">kcal</p>
+          </div>
+          <div className={`rounded-xl p-3 text-center ${kcalNette > impostazioni.targetCalorie ? 'bg-red-50' : 'bg-blue-50'}`}>
+            <p className="text-xs text-gray-500 mb-0.5">Nette</p>
+            <p className={`text-xl font-bold ${kcalNette > impostazioni.targetCalorie ? 'text-red-600' : 'text-blue-600'}`}>
+              {kcalNette}
+            </p>
+            <p className="text-xs text-gray-400">kcal</p>
           </div>
         </div>
-        <div className="mt-3 space-y-1">
+
+        {/* Grafico a barre */}
+        <ResponsiveContainer width="100%" height={150}>
+          <BarChart data={datiGrafico} margin={{ top: 4, right: 4, bottom: 0, left: -10 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#F3F4F6" />
+            <XAxis dataKey="nome" tick={{ fontSize: 11, fill: '#6B7280' }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 10, fill: '#9CA3AF' }} axisLine={false} tickLine={false} width={45} />
+            <Tooltip
+              cursor={{ fill: '#F9FAFB' }}
+              formatter={(v: number) => [`${v} kcal`]}
+              contentStyle={{ borderRadius: 8, border: '1px solid #E5E7EB', fontSize: 12 }}
+            />
+            <ReferenceLine
+              y={impostazioni.targetCalorie}
+              stroke="#94A3B8"
+              strokeDasharray="5 3"
+              label={{ value: 'target', position: 'right', fontSize: 10, fill: '#94A3B8' }}
+            />
+            <Bar dataKey="kcal" radius={[5, 5, 0, 0]} maxBarSize={52}>
+              {datiGrafico.map((entry, i) => (
+                <Cell key={i} fill={entry.fill} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+
+        {/* Stato bilancio */}
+        <div className={`mt-2 rounded-xl px-4 py-2.5 text-sm text-center font-medium ${statoColori.bg} ${statoColori.text}`}>
+          {Math.abs(bilancio) <= 100
+            ? <span>⚖️ Bilancio equilibrato rispetto al target</span>
+            : bilancio > 0
+              ? <span>⬆️ Surplus di <strong>{bilancio} kcal</strong> rispetto al target</span>
+              : <span>⬇️ Deficit di <strong>{Math.abs(bilancio)} kcal</strong> rispetto al target</span>
+          }
+        </div>
+        <p className="text-xs text-gray-400 mt-1.5 text-center">
+          Nette = assunte − bruciate con le attività
+        </p>
+      </div>
+
+      {/* ── Calorie assunte vs target (barra) ── */}
+      <div>
+        <div className="space-y-1">
           <div className="flex justify-between text-xs text-gray-500">
-            <span>Obiettivo: {impostazioni.targetCalorie} kcal</span>
-            <span className={percCalorie >= 100 ? 'text-red-500 font-semibold' : 'text-emerald-600 font-semibold'}>
-              {percCalorie}%
+            <span>Calorie assunte / target</span>
+            <span className={`font-semibold ${tot.calorie >= impostazioni.targetCalorie ? 'text-red-500' : 'text-emerald-600'}`}>
+              {Math.round((tot.calorie / impostazioni.targetCalorie) * 100)}%
             </span>
           </div>
           <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
             <div
               className="h-full rounded-full transition-all"
               style={{
-                width: `${percCalorie}%`,
-                backgroundColor: percCalorie >= 100 ? '#EF4444' : '#10B981',
+                width: `${Math.min((tot.calorie / impostazioni.targetCalorie) * 100, 100)}%`,
+                backgroundColor: tot.calorie >= impostazioni.targetCalorie ? '#EF4444' : '#10B981',
               }}
             />
           </div>
+          <p className="text-xs text-right text-gray-400">
+            {tot.calorie} / {impostazioni.targetCalorie} kcal
+          </p>
         </div>
       </div>
 
-      {/* Grafico a torta macronutrienti */}
+      {/* ── Grafico a torta macronutrienti ── */}
       {haCalorie && (
         <div>
           <p className="text-xs font-semibold text-gray-600 mb-2">Distribuzione macronutrienti</p>
@@ -153,7 +250,7 @@ export function NutritionSummary() {
         </div>
       )}
 
-      {/* Micronutrienti con barre RDA */}
+      {/* ── Micronutrienti con barre target ── */}
       <div className="space-y-2.5">
         <p className="text-xs font-semibold text-gray-600">% del fabbisogno giornaliero</p>
         <BarraProgresso label="Proteine" valore={tot.proteine} max={impostazioni.targetProteine} colore="#3B82F6" unita="g" />
