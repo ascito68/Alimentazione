@@ -77,6 +77,14 @@ export interface VoceAttivita {
   durata: number; // minuti
 }
 
+export interface ImpostazioniBMR {
+  sesso: 'M' | 'F';
+  eta: number;
+  altezza: number;
+  peso: number;
+  livello: string;
+}
+
 export interface ImpostazioniGoogle {
   spreadsheetId: string | null;
   accessToken: string | null;

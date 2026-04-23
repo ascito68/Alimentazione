@@ -7,6 +7,7 @@ import {
   Alimento,
   ImpostazioniUtente,
   ImpostazioniGoogle,
+  ImpostazioniBMR,
   VoceAttivita,
 } from '../types';
 import { calcolaNutrienti, creaGiornoVuoto, oggiISO } from '../utils/calculations';
@@ -19,6 +20,7 @@ import {
   salvaImpostazioni,
   salvaImpostazioniGoogle,
   salvaAttivita,
+  salvaBmr,
 } from '../lib/db';
 import { supabaseConfigurato } from '../lib/supabase';
 
@@ -33,6 +35,9 @@ interface AppState {
   vociAttivita: VoceAttivita[];
   setPesoAttivita: (peso: number) => void;
   setVociAttivita: (voci: VoceAttivita[]) => void;
+
+  bmr: ImpostazioniBMR;
+  setBmr: (b: Partial<ImpostazioniBMR>) => void;
 
   setDataSelezionata: (data: string) => void;
   giornoCorrente: () => GiornoAlimentare;
@@ -76,6 +81,15 @@ export const useStore = create<AppState>()(
       setVociAttivita: (voci) => {
         set({ vociAttivita: voci });
         if (supabaseConfigurato) salvaAttivita(get().pesoAttivita, voci).catch(console.error);
+      },
+
+      bmr: { sesso: 'M', eta: 30, altezza: 170, peso: 70, livello: 'moderato' },
+      setBmr: (b) => {
+        set((s) => {
+          const aggiornato = { ...s.bmr, ...b };
+          if (supabaseConfigurato) salvaBmr(aggiornato).catch(console.error);
+          return { bmr: aggiornato };
+        });
       },
 
       setDataSelezionata: (data) => {
@@ -226,6 +240,7 @@ export const useStore = create<AppState>()(
             vociAttivita: (imp.attivita?.voci && imp.attivita.voci.length > 0)
               ? imp.attivita.voci
               : s.vociAttivita,
+            bmr: imp.bmr ?? s.bmr,
             caricamento: false,
           }));
         } catch {
@@ -249,6 +264,7 @@ export const useStore = create<AppState>()(
         google: s.google,
         pesoAttivita: s.pesoAttivita,
         vociAttivita: s.vociAttivita,
+        bmr: s.bmr,
       }),
     }
   )

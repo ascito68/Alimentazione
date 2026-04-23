@@ -1,5 +1,5 @@
 import { supabase } from './supabase'
-import { GiornoAlimentare, TipoPasto, VoceAlimento, VoceAttivita, ImpostazioniUtente, ImpostazioniGoogle } from '../types'
+import { GiornoAlimentare, TipoPasto, VoceAlimento, VoceAttivita, ImpostazioniBMR, ImpostazioniUtente, ImpostazioniGoogle } from '../types'
 import { creaGiornoVuoto } from '../utils/calculations'
 
 interface VocePastoRow {
@@ -127,13 +127,14 @@ export async function caricaImpostazioni(): Promise<{
   utente: Partial<ImpostazioniUtente> | null
   google: Partial<ImpostazioniGoogle> | null
   attivita: { peso: number; voci: VoceAttivita[] } | null
+  bmr: ImpostazioniBMR | null
 }> {
   const { data, error } = await supabase
     .from('impostazioni_utente')
     .select('*')
     .single()
 
-  if (error || !data) return { utente: null, google: null, attivita: null }
+  if (error || !data) return { utente: null, google: null, attivita: null, bmr: null }
 
   const row = data as {
     nome: string
@@ -146,6 +147,11 @@ export async function caricaImpostazioni(): Promise<{
     google_spreadsheet_id: string | null
     peso_attivita: number | null
     voci_attivita: VoceAttivita[] | null
+    bmr_sesso: 'M' | 'F' | null
+    bmr_eta: number | null
+    bmr_altezza: number | null
+    bmr_peso: number | null
+    bmr_livello: string | null
   }
 
   return {
@@ -164,7 +170,29 @@ export async function caricaImpostazioni(): Promise<{
       peso: row.peso_attivita ?? 70,
       voci: row.voci_attivita ?? [],
     },
+    bmr: row.bmr_sesso ? {
+      sesso: row.bmr_sesso,
+      eta: row.bmr_eta ?? 30,
+      altezza: row.bmr_altezza ?? 170,
+      peso: row.bmr_peso ?? 70,
+      livello: row.bmr_livello ?? 'moderato',
+    } : null,
   }
+}
+
+export async function salvaBmr(b: ImpostazioniBMR): Promise<void> {
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return
+
+  await supabase.from('impostazioni_utente').upsert({
+    user_id: user.id,
+    bmr_sesso: b.sesso,
+    bmr_eta: b.eta,
+    bmr_altezza: b.altezza,
+    bmr_peso: b.peso,
+    bmr_livello: b.livello,
+    updated_at: new Date().toISOString(),
+  })
 }
 
 export async function salvaAttivita(peso: number, voci: VoceAttivita[]): Promise<void> {

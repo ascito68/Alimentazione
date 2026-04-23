@@ -1,40 +1,33 @@
-import { useState, useMemo } from 'react';
+import { useMemo } from 'react';
 import { useStore } from '../store/useStore';
 
 const LIVELLI_ATTIVITA = [
-  { id: 'sedentario',    label: 'Sedentario',              desc: 'Poco o nessun esercizio',         fattore: 1.2   },
-  { id: 'leggero',       label: 'Leggermente attivo',       desc: '1–3 allenamenti/settimana',       fattore: 1.375 },
-  { id: 'moderato',      label: 'Moderatamente attivo',     desc: '3–5 allenamenti/settimana',       fattore: 1.55  },
-  { id: 'molto',         label: 'Molto attivo',             desc: '6–7 allenamenti/settimana',       fattore: 1.725 },
-  { id: 'estremo',       label: 'Estremamente attivo',      desc: 'Atleta o lavoro fisico intenso',  fattore: 1.9   },
+  { id: 'sedentario', label: 'Sedentario',          desc: 'Poco o nessun esercizio',        fattore: 1.2   },
+  { id: 'leggero',    label: 'Leggermente attivo',   desc: '1–3 allenamenti/settimana',      fattore: 1.375 },
+  { id: 'moderato',   label: 'Moderatamente attivo', desc: '3–5 allenamenti/settimana',      fattore: 1.55  },
+  { id: 'molto',      label: 'Molto attivo',         desc: '6–7 allenamenti/settimana',      fattore: 1.725 },
+  { id: 'estremo',    label: 'Estremamente attivo',  desc: 'Atleta o lavoro fisico intenso', fattore: 1.9   },
 ];
 
 export function BMRPanel() {
-  const { impostazioni } = useStore();
+  const { impostazioni, bmr, setBmr } = useStore();
 
-  const [sesso, setSesso] = useState<'M' | 'F'>('M');
-  const [eta, setEta] = useState(30);
-  const [altezza, setAltezza] = useState(170);
-  const [peso, setPeso] = useState(70);
-  const [livello, setLivello] = useState('moderato');
-
-  // Harris-Benedict (versione rivista Roza & Shizgal 1984)
-  const bmr = useMemo(() => {
-    if (sesso === 'M') {
-      return Math.round(88.362 + 13.397 * peso + 4.799 * altezza - 5.677 * eta);
+  const calcolaBmr = useMemo(() => {
+    if (bmr.sesso === 'M') {
+      return Math.round(88.362 + 13.397 * bmr.peso + 4.799 * bmr.altezza - 5.677 * bmr.eta);
     } else {
-      return Math.round(447.593 + 9.247 * peso + 3.098 * altezza - 4.330 * eta);
+      return Math.round(447.593 + 9.247 * bmr.peso + 3.098 * bmr.altezza - 4.330 * bmr.eta);
     }
-  }, [sesso, eta, altezza, peso]);
+  }, [bmr.sesso, bmr.eta, bmr.altezza, bmr.peso]);
 
-  const fattore = LIVELLI_ATTIVITA.find(l => l.id === livello)!.fattore;
-  const tdee = Math.round(bmr * fattore);
+  const fattore = LIVELLI_ATTIVITA.find(l => l.id === bmr.livello)!.fattore;
+  const tdee = Math.round(calcolaBmr * fattore);
   const diff = tdee - impostazioni.targetCalorie;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5">
       <h2 className="font-bold text-gray-800 mb-1">🔥 Metabolismo basale (BMR)</h2>
-      <p className="text-xs text-gray-400 mb-4">Formula di Harris-Benedict (rivista 1984)</p>
+      <p className="text-xs text-gray-400 mb-4">Formula di Harris-Benedict (rivista 1984) — dati salvati automaticamente</p>
 
       <div className="space-y-3">
         {/* Sesso */}
@@ -44,9 +37,9 @@ export function BMRPanel() {
             {(['M', 'F'] as const).map(s => (
               <button
                 key={s}
-                onClick={() => setSesso(s)}
+                onClick={() => setBmr({ sesso: s })}
                 className={`py-2 rounded-xl text-sm font-medium border transition-colors ${
-                  sesso === s
+                  bmr.sesso === s
                     ? 'bg-emerald-500 text-white border-emerald-500'
                     : 'border-gray-200 text-gray-600 hover:bg-gray-50'
                 }`}
@@ -60,18 +53,18 @@ export function BMRPanel() {
         {/* Età / Altezza / Peso */}
         <div className="grid grid-cols-3 gap-2">
           {[
-            { label: 'Età (anni)', value: eta,     set: setEta,     min: 10, max: 100 },
-            { label: 'Altezza (cm)', value: altezza, set: setAltezza, min: 100, max: 250 },
-            { label: 'Peso (kg)',  value: peso,    set: setPeso,    min: 30,  max: 250 },
+            { label: 'Età (anni)',    value: bmr.eta,     field: 'eta'     as const, min: 10,  max: 100 },
+            { label: 'Altezza (cm)', value: bmr.altezza, field: 'altezza' as const, min: 100, max: 250 },
+            { label: 'Peso (kg)',    value: bmr.peso,    field: 'peso'    as const, min: 30,  max: 250 },
           ].map(f => (
-            <div key={f.label}>
+            <div key={f.field}>
               <label className="text-xs font-medium text-gray-600 block mb-1">{f.label}</label>
               <input
                 type="number"
                 min={f.min}
                 max={f.max}
                 value={f.value}
-                onChange={e => f.set(parseFloat(e.target.value) || f.min)}
+                onChange={e => setBmr({ [f.field]: parseFloat(e.target.value) || f.min })}
                 className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400"
               />
             </div>
@@ -82,8 +75,8 @@ export function BMRPanel() {
         <div>
           <label className="text-xs font-medium text-gray-600 block mb-1">Livello di attività</label>
           <select
-            value={livello}
-            onChange={e => setLivello(e.target.value)}
+            value={bmr.livello}
+            onChange={e => setBmr({ livello: e.target.value })}
             className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-emerald-400 bg-white"
           >
             {LIVELLI_ATTIVITA.map(l => (
@@ -97,7 +90,7 @@ export function BMRPanel() {
       <div className="mt-4 grid grid-cols-2 gap-3">
         <div className="bg-gray-50 rounded-xl p-3 text-center">
           <p className="text-xs text-gray-500 mb-1">Metabolismo basale</p>
-          <p className="text-2xl font-bold text-gray-800">{bmr}</p>
+          <p className="text-2xl font-bold text-gray-800">{calcolaBmr}</p>
           <p className="text-xs text-gray-400">kcal/giorno a riposo</p>
         </div>
         <div className="bg-emerald-50 rounded-xl p-3 text-center">
