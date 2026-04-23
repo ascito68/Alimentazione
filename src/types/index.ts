@@ -20,6 +20,7 @@ export type CategoriaAlimento =
   | 'grassi'
   | 'dolci'
   | 'bevande'
+  | 'piatti'
   | 'altro';
 
 export interface Alimento {

@@ -557,6 +557,26 @@ export const DATABASE_ALIMENTI: Alimento[] = [
   { id: 'hummus',           nome: 'Hummus',                  categoria: 'altro', nutrienti: { calorie: 166, proteine: 8,   carboidrati: 14,  zuccheri: 1.5, grassi: 9.6, grassiSaturi: 1.4, fibre: 6,   sodio: 379 } },
   { id: 'besciamella',      nome: 'Besciamella',             categoria: 'altro', nutrienti: { calorie: 100, proteine: 3,   carboidrati: 8,   zuccheri: 3,   grassi: 6.5, grassiSaturi: 4,   fibre: 0.3, sodio: 330 } },
   { id: 'brodo-vegetale',   nome: 'Brodo vegetale',          categoria: 'altro', nutrienti: { calorie: 10,  proteine: 0.5, carboidrati: 1.5, zuccheri: 1,   grassi: 0.3, grassiSaturi: 0.1, fibre: 0,   sodio: 800 } },
+
+  // ── PIATTI PRONTI ────────────────────────────────────────────────────────
+  // Valori per 100g — fonte: CREA, banche dati composizione alimenti italiani
+  { id: 'pizza-margherita',      nome: 'Pizza Margherita',               categoria: 'piatti', nutrienti: { calorie: 235, proteine: 10,  carboidrati: 32, zuccheri: 3.5, grassi: 7.5, grassiSaturi: 3.5, fibre: 2,   sodio: 550 } },
+  { id: 'pizza-marinara',        nome: 'Pizza Marinara',                 categoria: 'piatti', nutrienti: { calorie: 185, proteine: 6,   carboidrati: 34, zuccheri: 4,   grassi: 3,   grassiSaturi: 0.5, fibre: 2.5, sodio: 420 } },
+  { id: 'pizza-capricciosa',     nome: 'Pizza Capricciosa',              categoria: 'piatti', nutrienti: { calorie: 255, proteine: 12,  carboidrati: 30, zuccheri: 3,   grassi: 10,  grassiSaturi: 4,   fibre: 2.5, sodio: 720 } },
+  { id: 'pizza-quattro-stagioni',nome: 'Pizza Quattro Stagioni',         categoria: 'piatti', nutrienti: { calorie: 260, proteine: 12,  carboidrati: 30, zuccheri: 3,   grassi: 11,  grassiSaturi: 4.5, fibre: 2.5, sodio: 740 } },
+  { id: 'pizza-quattro-formaggi',nome: 'Pizza Quattro Formaggi',         categoria: 'piatti', nutrienti: { calorie: 310, proteine: 15,  carboidrati: 28, zuccheri: 2,   grassi: 16,  grassiSaturi: 8,   fibre: 1.5, sodio: 750 } },
+  { id: 'pizza-diavola',         nome: 'Pizza Diavola',                  categoria: 'piatti', nutrienti: { calorie: 275, proteine: 13,  carboidrati: 29, zuccheri: 3,   grassi: 13,  grassiSaturi: 5.5, fibre: 2,   sodio: 850 } },
+  { id: 'pizza-prosciutto-funghi',nome: 'Pizza Prosciutto e Funghi',     categoria: 'piatti', nutrienti: { calorie: 245, proteine: 12,  carboidrati: 30, zuccheri: 3,   grassi: 9,   grassiSaturi: 3.5, fibre: 2,   sodio: 650 } },
+  { id: 'pizza-napoli',          nome: 'Pizza Napoli (acciughe e capperi)',categoria: 'piatti', nutrienti: { calorie: 225, proteine: 11,  carboidrati: 30, zuccheri: 3.5, grassi: 7,   grassiSaturi: 3,   fibre: 2,   sodio: 900 } },
+  { id: 'pizza-vegetariana',     nome: 'Pizza Vegetariana',              categoria: 'piatti', nutrienti: { calorie: 220, proteine: 10,  carboidrati: 31, zuccheri: 4,   grassi: 7,   grassiSaturi: 3,   fibre: 3,   sodio: 500 } },
+  { id: 'pizza-bianca',          nome: 'Pizza Bianca (olio e rosmarino)',categoria: 'piatti', nutrienti: { calorie: 270, proteine: 11,  carboidrati: 32, zuccheri: 1.5, grassi: 10,  grassiSaturi: 4.5, fibre: 1.5, sodio: 480 } },
+  { id: 'pizza-tonno-cipolla',   nome: 'Pizza Tonno e Cipolla',          categoria: 'piatti', nutrienti: { calorie: 240, proteine: 14,  carboidrati: 30, zuccheri: 3.5, grassi: 8,   grassiSaturi: 3,   fibre: 2,   sodio: 580 } },
+  { id: 'pizza-salsiccia',       nome: 'Pizza Salsiccia e Friarielli',   categoria: 'piatti', nutrienti: { calorie: 280, proteine: 13,  carboidrati: 29, zuccheri: 2.5, grassi: 13,  grassiSaturi: 5,   fibre: 2.5, sodio: 700 } },
+  { id: 'pizza-fiori-zucca',     nome: 'Pizza Fiori di Zucca e Alici',   categoria: 'piatti', nutrienti: { calorie: 245, proteine: 10,  carboidrati: 30, zuccheri: 1.5, grassi: 10,  grassiSaturi: 3.5, fibre: 1.5, sodio: 620 } },
+  { id: 'calzone-forno',         nome: 'Calzone al forno',               categoria: 'piatti', nutrienti: { calorie: 290, proteine: 14,  carboidrati: 32, zuccheri: 2.5, grassi: 12,  grassiSaturi: 5,   fibre: 2,   sodio: 680 } },
+  { id: 'pizza-romana',          nome: 'Pizza Romana (sottile e croccante)',categoria: 'piatti', nutrienti: { calorie: 250, proteine: 11,  carboidrati: 33, zuccheri: 3,   grassi: 8,   grassiSaturi: 3.5, fibre: 1.8, sodio: 580 } },
+  { id: 'focaccia',              nome: 'Focaccia genovese',              categoria: 'piatti', nutrienti: { calorie: 290, proteine: 8,   carboidrati: 43, zuccheri: 1,   grassi: 9,   grassiSaturi: 1.5, fibre: 2,   sodio: 680 } },
+  { id: 'focaccia-formaggio',    nome: 'Focaccia di Recco (col formaggio)',categoria: 'piatti', nutrienti: { calorie: 315, proteine: 13,  carboidrati: 35, zuccheri: 1.5, grassi: 14,  grassiSaturi: 6,   fibre: 1.5, sodio: 620 } },
 ];
 
 export const CATEGORIE_LABELS: Record<string, string> = {
@@ -570,5 +590,6 @@ export const CATEGORIE_LABELS: Record<string, string> = {
   grassi: 'Grassi, noci e semi',
   dolci: 'Dolci e zuccheri',
   bevande: 'Bevande',
+  piatti: 'Piatti pronti',
   altro: 'Altro',
 };
