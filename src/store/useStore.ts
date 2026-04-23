@@ -18,6 +18,7 @@ import {
   caricaImpostazioni,
   salvaImpostazioni,
   salvaImpostazioniGoogle,
+  salvaAttivita,
 } from '../lib/db';
 import { supabaseConfigurato } from '../lib/supabase';
 
@@ -68,8 +69,14 @@ export const useStore = create<AppState>()(
 
       pesoAttivita: 70,
       vociAttivita: [{ id: 'default', attivitaId: 'camminata-normale', durata: 30 }],
-      setPesoAttivita: (peso) => set({ pesoAttivita: peso }),
-      setVociAttivita: (voci) => set({ vociAttivita: voci }),
+      setPesoAttivita: (peso) => {
+        set({ pesoAttivita: peso });
+        if (supabaseConfigurato) salvaAttivita(peso, get().vociAttivita).catch(console.error);
+      },
+      setVociAttivita: (voci) => {
+        set({ vociAttivita: voci });
+        if (supabaseConfigurato) salvaAttivita(get().pesoAttivita, voci).catch(console.error);
+      },
 
       setDataSelezionata: (data) => {
         set((s) => {
@@ -215,6 +222,10 @@ export const useStore = create<AppState>()(
             google: imp.google
               ? { ...s.google, spreadsheetId: imp.google.spreadsheetId ?? s.google.spreadsheetId }
               : s.google,
+            pesoAttivita: imp.attivita?.peso ?? s.pesoAttivita,
+            vociAttivita: (imp.attivita?.voci && imp.attivita.voci.length > 0)
+              ? imp.attivita.voci
+              : s.vociAttivita,
             caricamento: false,
           }));
         } catch {
