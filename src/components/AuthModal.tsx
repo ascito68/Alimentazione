@@ -19,13 +19,6 @@ function IconGoogle() {
   );
 }
 
-function IconApple() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 814 1000" aria-hidden="true" fill="currentColor">
-      <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.3-164-39.3c-76 0-103.7 40.8-165.9 40.8s-105.4-57.5-155.5-127.4C46 405.8 43 340.6 43 305.4c0-220 145.3-336.5 285.5-336.5 75.6 0 138.4 49.9 183.8 49.9 43.5 0 113.6-52.6 200.5-52.6 30.6 0 134.5 2.5 198.5 104.8zm-234-181.2c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.5 32.4-55.1 83.6-55.1 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 102.5-30.4 135.5-71.3z"/>
-    </svg>
-  );
-}
 
 export function AuthModal({ onSuccess }: AuthModalProps) {
   const [modalita, setModalita] = useState<Modalita>('login');
@@ -33,7 +26,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
   const [password, setPassword] = useState('');
   const [mostraPassword, setMostraPassword] = useState(false);
   const [caricamento, setCaricamento] = useState(false);
-  const [caricamentoOAuth, setCaricamentoOAuth] = useState<'google' | 'apple' | null>(null);
+  const [caricamentoOAuth, setCaricamentoOAuth] = useState<'google' | null>(null);
   const [errore, setErrore] = useState('');
   const [messaggio, setMessaggio] = useState('');
 
@@ -72,7 +65,7 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
     }
   }
 
-  async function accediConProvider(provider: 'google' | 'apple') {
+  async function accediConProvider(provider: 'google') {
     setErrore('');
     setCaricamentoOAuth(provider);
     try {
@@ -148,17 +141,6 @@ export function AuthModal({ onSuccess }: AuthModalProps) {
               Continua con Google
             </button>
 
-            <button
-              type="button"
-              onClick={() => accediConProvider('apple')}
-              disabled={!!caricamentoOAuth}
-              className="w-full flex items-center justify-center gap-3 py-2.5 px-4 rounded-xl text-sm font-medium text-white bg-black hover:bg-gray-900 transition-colors disabled:opacity-60"
-            >
-              {caricamentoOAuth === 'apple'
-                ? <Loader2 size={18} className="animate-spin text-gray-300" />
-                : <IconApple />}
-              Continua con Apple
-            </button>
           </div>
         )}
 
